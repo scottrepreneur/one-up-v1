@@ -2,12 +2,12 @@ import {
   corsSuccessResponse,
   corsErrorResponse,
   runWarm,
-  getOrCreateUser
+  getOrCreateUser,
 } from './utils';
 
 const getUser: Function = async (event: AWSLambda.APIGatewayEvent) => {
   // @ts-ignore
-  const account = event.pathParameters.user.toLowerCase();
+  const account = event.pathParameters.userId.toLowerCase();
 
   if (account) {
     const user = await getOrCreateUser(account);

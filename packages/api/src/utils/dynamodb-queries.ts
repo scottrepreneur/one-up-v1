@@ -1,4 +1,5 @@
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
+import { ActivityRecord, StringifiedUserRecord } from './definitions';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -9,9 +10,9 @@ const getUser = async (
   Count: number,
   ScannedCount: number
 }> => {
-  const params = {
+  const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
-    KeyConditionExpression: 'user = :hkey',
+    KeyConditionExpression: 'userId = :hkey',
     ExpressionAttributeValues: {
       ':hkey': user,
     },
@@ -42,7 +43,7 @@ const addRecord = (params: any) => {
   });
 };
 
-const getOrCreateUser = async (user: string) => {
+export const getOrCreateUser = async (user: string) => {
   const timestamp = new Date().getTime();
 
   const userRecord = await getUser(user);
@@ -51,10 +52,10 @@ const getOrCreateUser = async (user: string) => {
     return userRecord.Items[0];
   }
 
-  const newUserRecord = {
-    address: user,
+  const newUserRecord: StringifiedUserRecord = {
+    userId: user,
     currentGoal: 1,
-    goalHistory: [],
+    goalHistory: JSON.stringify([]),
     activities: JSON.stringify([]),
     activitiesTimeline: JSON.stringify([]),
     email: '',
@@ -81,4 +82,80 @@ const getOrCreateUser = async (user: string) => {
   }
 };
 
-export default getOrCreateUser;
+export const updateUser = (params: any) => {
+  return new Promise((res, rej) => {
+    dynamoDb.update(params, (err: any, data: any) => {
+      if (err) {
+        console.log('Error', err);
+        rej(err);
+      } else {
+        res(data);
+      }
+    });
+  });
+};
+
+export const addActivityToDb = async (
+  account: string,
+  activityList: Array<ActivityRecord>,
+) => {
+  const timestamp = new Date().getTime();
+  const params: any = {
+    TableName: process.env.DYNAMODB_USERS_TABLE,
+    Key: {
+      userId: account,
+    },
+    ExpressionAttributeNames: {
+      '#activities': 'activities',
+      '#updated': 'updated',
+    },
+    ExpressionAttributeValues: {
+      ':activities': JSON.stringify(activityList),
+      ':updated': timestamp,
+    },
+    UpdateExpression: 'SET #activities = :activities, #updated = :updated',
+    ReturnValues: 'ALL_NEW',
+  };
+
+  try {
+    const result = await updateUser(params);
+    console.log(result);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addActivityHistoryToDb = async (
+  account: string,
+  userActivityHistory: Array<{
+    activity: string,
+    timestamp: number
+}>) => {
+  const timestamp =  new Date().getTime();
+
+  const params: any = {
+    TableName: process.env.DYNAMODB_USERS_TABLE,
+    Key: {
+      userId: account,
+    },
+    ExpressionAttributeNames: {
+      '#activitiesTimeline': 'activitiesTimeline',
+      '#updated': 'updated',
+    },
+    ExpressionAttributeValues: {
+      ':activitiesTimeline': JSON.stringify(userActivityHistory),
+      ':updated': timestamp
+    },
+    UpdateExpression: 'SET #activitiesTimeline = :activitiesTimeline, #updated = :updated',
+    ReturnValues: 'ALL_NEW',
+  };
+
+  try {
+    const result = await updateUser(params);
+    console.log(result);
+  } catch (err) {
+    console.log(err);
+  }
+
+  console.log(userActivityHistory);
+};

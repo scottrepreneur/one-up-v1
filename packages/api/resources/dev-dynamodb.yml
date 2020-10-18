@@ -4,10 +4,10 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       AttributeDefinitions:
-        - AttributeName: user
+        - AttributeName: userId
           AttributeType: S
       KeySchema:
-        - AttributeName: user
+        - AttributeName: userId
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 1

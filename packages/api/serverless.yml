@@ -90,12 +90,24 @@ custom:
 #    - exclude-me-dir/**
 
 functions:
-  hello-typescript:
+  get-user:
     handler: src/get-user.default
     events:
       - http:
-          path: user/{user}
+          path: user/{userId}
           method: get
+  add-activity:
+    handler: src/add-activity.default
+    events:
+      - http:
+          path: user/{userId}/activities
+          method: post
+  add-activity-history:
+    handler: src/add-activity-history.default
+    events:
+      - http:
+          path: user/{userId}/activities/{activityKey}
+          method: post
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
