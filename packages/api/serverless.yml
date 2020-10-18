@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: service-name
+service: one-up
 
 package:
   individually: true
@@ -33,6 +33,16 @@ provider:
       Action:
         - 'lambda:InvokeFunction'
       Resource: '*'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_USERS_TABLE}'
 
 custom:
   webpack:
@@ -48,6 +58,8 @@ custom:
   prune:
     automatic: true
     number: 5 # Number of versions to keep
+  environment:
+    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -79,16 +91,10 @@ custom:
 
 functions:
   hello-typescript:
-    handler: src/hello-ts.default
+    handler: src/get-user.default
     events:
       - http:
-          path: hello-typescript
-          method: get
-  hello:
-    handler: src/hello.default
-    events:
-      - http:
-          path: hello
+          path: user/{user}
           method: get
 
 #    The following are a few example events you can configure
@@ -118,6 +124,9 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+resources:
+  - ${file(resources/${opt:stage, self:provider.stage}-dynamodb.yml)}
 
 plugins:
   - serverless-webpack

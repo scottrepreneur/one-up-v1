@@ -1,0 +1,15 @@
+Resources:
+  UsersDynamoDbTable:
+    Type: 'AWS::DynamoDB::Table'
+    DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: user
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: one-up-api-users-dev
