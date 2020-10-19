@@ -8,7 +8,10 @@ import React, {
 } from 'react';
 import axios from 'axios';
 
+const ACTIVITY_HISTORY = 'ACTIVITY_HISTORY';
+
 const UPDATE_DB_DATA = 'UPDATE_DB_DATA';
+const UPDATE_ACTIVITY_HISTORY = 'UPDATE_ACTIVITY_HISTORY';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const ACCOUNT = process.env.REACT_APP_ACCOUNT;
@@ -32,6 +35,17 @@ function reducer(state, { type, payload }) {
       };
     }
 
+    case UPDATE_ACTIVITY_HISTORY: {
+      const { account, activityHistory } = payload;
+      return {
+        ...state,
+        [account]: {
+          ...state?.[account],
+          [ACTIVITY_HISTORY]: activityHistory,
+        },
+      };
+    }
+
     default: {
       throw Error(
         `Unexpected action type in ApplicationContext reducer: '${type}'.`
@@ -47,6 +61,13 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE_DB_DATA, payload: { account, accountStore } });
   }, []);
 
+  const updateActivityHistory = useCallback((account, activityHistory) => {
+    dispatch({
+      type: UPDATE_ACTIVITY_HISTORY,
+      payload: { account, activityHistory },
+    });
+  }, []);
+
   return (
     <ApplicationContext.Provider
       value={useMemo(
@@ -54,9 +75,10 @@ export default function Provider({ children }) {
           state,
           {
             updateAccountStore,
+            updateActivityHistory,
           },
         ],
-        [state, updateAccountStore]
+        [state, updateAccountStore, updateActivityHistory]
       )}
     >
       {children}
@@ -65,7 +87,10 @@ export default function Provider({ children }) {
 }
 
 export function Updater() {
-  const [, { updateAccountStore }] = useApplicationContext();
+  const [
+    ,
+    { updateAccountStore, updateActivityHistory },
+  ] = useApplicationContext();
 
   // on account change, fetch all quests from firebase and save them in context
   useEffect(() => {
@@ -80,6 +105,21 @@ export function Updater() {
     getAccount(ACCOUNT);
   }, [updateAccountStore]);
 
+  // on account change, fetch all quests from firebase and save them in context
+  useEffect(() => {
+    async function getActivityHistory(account) {
+      try {
+        const result = await axios.get(
+          `${API_URL}/user/${account}/activities/history`
+        );
+        updateActivityHistory(account, result.data);
+      } catch (err) {
+        console.log('Error', err);
+      }
+    }
+    getActivityHistory(ACCOUNT);
+  }, [updateActivityHistory]);
+
   return null;
 }
 
@@ -87,4 +127,10 @@ export function useUserDbData() {
   const [state] = useApplicationContext();
   const dbData = state?.[ACCOUNT]?.accountStore;
   return dbData;
+}
+
+export function useActivityHistory() {
+  const [state] = useApplicationContext();
+  const activityHistory = state?.[ACCOUNT]?.[ACTIVITY_HISTORY];
+  return activityHistory;
 }

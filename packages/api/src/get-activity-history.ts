@@ -4,7 +4,7 @@ import {
   runWarm,
   getOrCreateUser,
   ActivityRecord,
-  ActivityTimelineRecord,
+  ActivityHistoryRecord,
 } from './utils';
 
 const getActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) => {
@@ -15,7 +15,7 @@ const getActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) =>
     const user = await getOrCreateUser(account);
     const activities = JSON.parse(user.activities);
 
-    const returnActivityTimeline = JSON.parse(user.activitiesTimeline).map((h: ActivityTimelineRecord) => {
+    const returnActivityTimeline = JSON.parse(user.activitiesTimeline).map((h: ActivityHistoryRecord) => {
       const activity: ActivityRecord = activities.filter((a: ActivityRecord) => a.activity === h.activity)[0];
       return {
         ...h,

@@ -43,3 +43,10 @@ export interface ActivityHistoryRecord {
   activity: string;
   timestamp: number;
 }
+
+export interface ExtendedActivityHistoryRecord {
+  activity: string;
+  timestamp: number;
+  name: string;
+  points: number;
+}

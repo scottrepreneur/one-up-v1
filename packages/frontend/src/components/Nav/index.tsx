@@ -7,6 +7,10 @@ import Row from '../Row';
 
 const menuItems = [
   {
+    label: 'Create',
+    link: '/activity/create',
+  },
+  {
     label: 'Activities',
     link: '/activity/list',
   },

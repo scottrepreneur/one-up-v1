@@ -45,6 +45,8 @@ export const theme = () => {
     textColor: '#ffffff',
     greyText: '#BDBDBD',
 
+    primary: '#49B2F8',
+
     backgroundColor: '#212121',
     lighterBackgroundColor: '#333333',
     // media widths
