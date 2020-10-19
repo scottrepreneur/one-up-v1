@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  ThemeProvider as StyledComponentsThemeProvider,
-  createGlobalStyle,
-  css,
-} from 'styled-components';
+import { ThemeProvider, createGlobalStyle, css } from 'styled-components';
 
 export const MEDIA_WIDTHS = {
   upToSmall: 600,
@@ -24,13 +20,23 @@ const mediaWidthTemplates = Object.keys(MEDIA_WIDTHS).reduce(
   {}
 );
 
-export default function ThemeProvider({ children }) {
-  return (
-    <StyledComponentsThemeProvider theme={theme}>
-      {children}
-    </StyledComponentsThemeProvider>
-  );
-}
+// type ThemeProps = {
+//   children: any;
+// }
+
+const AppThemeProvider = ({ children }) => {
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};
+
+// interface Theme {
+//   white: string;
+//   black: string;
+//   textColor: string;
+//   greyText: string;
+
+//   backgroundColor: string;
+//   mediaWidth: typeof mediaWidthTemplates,
+// }
 
 export const theme = () => {
   return {
@@ -40,6 +46,7 @@ export const theme = () => {
     greyText: '#BDBDBD',
 
     backgroundColor: '#212121',
+    lighterBackgroundColor: '#333333',
     // media widths
     mediaWidth: mediaWidthTemplates,
   };
@@ -47,7 +54,7 @@ export const theme = () => {
 
 export const GlobalStyle = createGlobalStyle`
   @supports (font-variation-settings: normal) {
-    html { font-family: 'Avenir',serif;}
+    html { font-family: 'Avenir', serif;}
   }
 
   html,
@@ -74,3 +81,5 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 `;
+
+export default AppThemeProvider;

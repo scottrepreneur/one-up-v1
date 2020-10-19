@@ -108,6 +108,18 @@ functions:
       - http:
           path: user/{userId}/activities/{activityKey}
           method: post
+  get-activities:
+    handler: src/get-activities.default
+    events:
+      - http:
+          path: user/{userId}/activities
+          method: get
+  get-activity-history:
+    handler: src/get-activity-history.default
+    events:
+      - http:
+          path: user/{userId}/activities/history
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

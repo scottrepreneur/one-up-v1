@@ -118,8 +118,7 @@ export const addActivityToDb = async (
   };
 
   try {
-    const result = await updateUser(params);
-    console.log(result);
+    updateUser(params);
   } catch (err) {
     console.log(err);
   }
@@ -131,7 +130,7 @@ export const addActivityHistoryToDb = async (
     activity: string,
     timestamp: number
 }>) => {
-  const timestamp =  new Date().getTime();
+  const timestamp = new Date().getTime();
 
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
@@ -144,18 +143,15 @@ export const addActivityHistoryToDb = async (
     },
     ExpressionAttributeValues: {
       ':activitiesTimeline': JSON.stringify(userActivityHistory),
-      ':updated': timestamp
+      ':updated': timestamp,
     },
     UpdateExpression: 'SET #activitiesTimeline = :activitiesTimeline, #updated = :updated',
     ReturnValues: 'ALL_NEW',
   };
 
   try {
-    const result = await updateUser(params);
-    console.log(result);
+    updateUser(params);
   } catch (err) {
     console.log(err);
   }
-
-  console.log(userActivityHistory);
 };
