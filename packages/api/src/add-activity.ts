@@ -1,13 +1,14 @@
+import { APIGatewayEvent } from 'aws-lambda';
 import {
   corsSuccessResponse,
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
   addActivityToDb,
-  ActivityRecord
+  ActivityRecord,
 } from './utils';
 
-const addActivity: Function = async (event: AWSLambda.APIGatewayEvent) => {
+const addActivity: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().getTime();
   const activity: {
     activity: string,
@@ -59,6 +60,7 @@ const addActivity: Function = async (event: AWSLambda.APIGatewayEvent) => {
       return response;
     }
   }
+  return null;
 };
 
 export default runWarm(addActivity);

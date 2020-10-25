@@ -1,3 +1,4 @@
+import { APIGatewayEvent } from 'aws-lambda';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -7,7 +8,7 @@ import {
   ActivityHistoryRecord,
 } from './utils';
 
-const getActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) => {
+const getActivityHistory: Function = async (event: APIGatewayEvent) => {
   // @ts-ignore
   const account = event.pathParameters.userId.toLowerCase();
 

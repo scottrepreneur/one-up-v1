@@ -1,6 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'import'],
   extends: ['prettier', 'airbnb'],
   parserOptions: {
     ecmaVersion: 6,
@@ -8,21 +8,27 @@ module.exports = {
   },
   env: { jest: true, browser: true, node: true },
   rules: { 
-    'no-console': 'warn',
-    "import/extensions": [
-      "error",
-      "ignorePackages",
+    'no-console': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
       {
-        "js": "never",
-        "ts": "never",
+        'js': 'never',
+        'ts': 'never',
       }
-   ]
+   ],
+   'import/no-unresolved': 'error',
+   'arrow-body-style': 'warn',
   },
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx']
+    },
     'import/resolver': {
-      node: {
-        paths: ['src'],
-        extensions: ['.js', '.ts'],
+      // use <root>/tsconfig.json
+      'typescript': {
+        path: ['src'],
+        'alwaysTryTypes': true,
       },
     },
   },

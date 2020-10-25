@@ -1,3 +1,4 @@
+import { APIGatewayEvent } from 'aws-lambda';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -5,7 +6,7 @@ import {
   getOrCreateUser,
 } from './utils';
 
-const getUser: Function = async (event: AWSLambda.APIGatewayEvent) => {
+const getUser: Function = async (event: APIGatewayEvent) => {
   // @ts-ignore
   const account = event.pathParameters.userId.toLowerCase();
 

@@ -1,3 +1,4 @@
+import { APIGatewayEvent } from 'aws-lambda';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -7,7 +8,7 @@ import {
   ActivityHistoryRecord,
 } from './utils';
 
-const addActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) => {
+const addActivityHistory: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().getTime();
   // @ts-ignore
   const account = event.pathParameters.userId.toLowerCase();
@@ -21,7 +22,7 @@ const addActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) =>
 
       userActivityHistory = JSON.parse(user.activitiesTimeline);
       const userActivities = JSON.parse(user.activities);
-      console.log(userActivities);
+      console.log(userActivityHistory);
 
       // check the activity exists for the user
       if (userActivities.filter((e: any) => e.activity === activityKey).length > 0) {
@@ -30,7 +31,9 @@ const addActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) =>
 
         // activity has been recorded in timeline before
         if (userActivityHistory.filter((e: any) => e.activity === activityKey).length > 0) {
-          const lastActivity: ActivityHistoryRecord = userActivityHistory.filter((e: any) => e.activity === activityKey).sort((e: any) => e.timestamp)[0];
+          const lastActivity: ActivityHistoryRecord = userActivityHistory
+            .filter((e: any) => e.activity === activityKey)
+            .sort((e: any) => e.timestamp)[0];
 
           // check cooldown has passed since last activity recorded
           if (timestamp - lastActivity.timestamp > cooldown) {
@@ -38,6 +41,7 @@ const addActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) =>
               activity: activityKey,
               timestamp,
             });
+            console.log(userActivityHistory);
 
             try {
               const result = await addActivityHistoryToDb(account, userActivityHistory);
@@ -52,11 +56,12 @@ const addActivityHistory: Function = async (event: AWSLambda.APIGatewayEvent) =>
             activity: activityKey,
             timestamp,
           });
+          console.log(userActivityHistory);
 
           try {
             const result = await addActivityHistoryToDb(account, userActivityHistory);
             console.log(result);
-            return corsSuccessResponse({ success: true });
+            return corsSuccessResponse({ success: result });
           } catch (err) {
             return corsErrorResponse({ error: err });
           }

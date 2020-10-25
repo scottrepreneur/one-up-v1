@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { ActivityRecord, StringifiedUserRecord } from './definitions';
+import { ActivityRecord, StringifiedUserRecord, ActivityHistoryRecord } from './definitions';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -55,7 +55,7 @@ export const getOrCreateUser = async (user: string) => {
   const newUserRecord: StringifiedUserRecord = {
     userId: user,
     currentGoal: 1,
-    goalHistory: JSON.stringify([]),
+    goalHistory: JSON.stringify([{ goal: 1, created: timestamp }]),
     activities: JSON.stringify([]),
     activitiesTimeline: JSON.stringify([]),
     email: '',
@@ -118,18 +118,18 @@ export const addActivityToDb = async (
   };
 
   try {
-    updateUser(params);
+    const result = await updateUser(params);
+    console.log(result);
+    return result;
   } catch (err) {
     console.log(err);
   }
+  return null;
 };
 
 export const addActivityHistoryToDb = async (
   account: string,
-  userActivityHistory: Array<{
-    activity: string,
-    timestamp: number
-}>) => {
+  userActivityHistory: Array<ActivityHistoryRecord>) => {
   const timestamp = new Date().getTime();
 
   const params: any = {
@@ -150,8 +150,10 @@ export const addActivityHistoryToDb = async (
   };
 
   try {
-    updateUser(params);
+    const result = await updateUser(params);
+    return result;
   } catch (err) {
     console.log(err);
+    return { error: err };
   }
 };
