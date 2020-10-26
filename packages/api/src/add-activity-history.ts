@@ -36,7 +36,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
             .sort((e: any) => e.timestamp)[0];
 
           // check cooldown has passed since last activity recorded
-          if (timestamp - lastActivity.timestamp > cooldown) {
+          if (timestamp - lastActivity.timestamp > cooldown * 60 * 1000) {
             userActivityHistory.push({
               activity: activityKey,
               timestamp,
@@ -50,6 +50,8 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
             } catch (err) {
               return corsErrorResponse({ error: err });
             }
+          } else {
+            return corsErrorResponse({ error: `Cool down for ${activityKey} has not expired. Try again in [TODO]` });
           }
         } else {
           userActivityHistory.push({

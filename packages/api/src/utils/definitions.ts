@@ -1,3 +1,27 @@
+export interface ActivityRecord {
+  activity: string;
+  name: string;
+  type: string;
+  category: string;
+  icon: string;
+  points: number;
+  cooldown: number;
+  frequency: number;
+  frequencyPeriod: string;
+  timestamp: number;
+  updated: number;
+}
+
+export interface ActivityHistoryRecord {
+  activity: string;
+  timestamp: number;
+}
+
+export interface GoalRecord {
+  goal: number;
+  created: number;
+}
+
 export interface UserRecord {
   userId: string;
   currentGoal: number;
@@ -23,23 +47,4 @@ export interface StringifiedUserRecord {
   emailPreferences: string;
   created: number;
   updated: number;
-}
-
-export interface ActivityRecord {
-  activity: string;
-  name: string;
-  type: string;
-  category: string;
-  icon: string;
-  points: number;
-  cooldown: number;
-  frequency: number;
-  frequencyPeriod: string;
-  timestamp: number;
-  updated: number;
-}
-
-export interface ActivityHistoryRecord {
-  activity: string;
-  timestamp: number;
 }

@@ -57,7 +57,9 @@
     "@types/node": "^13.1.0",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.529.0",
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.31"
   },
   "husky": {
     "hooks": {

@@ -1,4 +1,7 @@
-const LEVELS = [
+export const DAY_START = 2;
+export const TIMEZONE = 'America/Chicago';
+
+export const LEVELS = [
   {
     level: 1,
     min_points: 0,
@@ -30,5 +33,3 @@ const LEVELS = [
     level_name: 'bruiser',
   },
 ];
-
-export default LEVELS;
