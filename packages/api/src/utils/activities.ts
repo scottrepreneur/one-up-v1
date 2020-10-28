@@ -1,4 +1,4 @@
-import { parseISO, isAfter } from 'date-fns';
+import { parseISO, isAfter, formatDistanceToNow } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 
 import { DAY_START, TIMEZONE } from '../constants';
@@ -82,7 +82,7 @@ export const getActivitiesText = (
   timeSinceActivities.forEach((item: ActivityHistoryRecord) => {
     const { points, name } = activities.filter((a) => a.activity === item.activity)[0];
 
-    activitiesTextString += `${name} | Points: ${points} | Last: Today\n`;
+    activitiesTextString += `${name} | Points: ${points} | Last: ${formatDistanceToNow(parseISO(item.timestamp))}\n`;
   });
 
   return activitiesTextString;
