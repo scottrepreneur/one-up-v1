@@ -8,18 +8,18 @@ export interface ActivityRecord {
   cooldown: number;
   frequency: number;
   frequencyPeriod: string;
-  timestamp: number;
-  updated: number;
+  timestamp: string;
+  updated: string;
 }
 
 export interface ActivityHistoryRecord {
   activity: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface GoalRecord {
   goal: number;
-  created: number;
+  timestamp: string;
 }
 
 export interface UserRecord {
@@ -33,8 +33,9 @@ export interface UserRecord {
     marketing: boolean;
     notifications: boolean;
   };
-  created: number;
-  updated: number;
+  timestamp: string;
+  updated: string;
+  timezone: string;
 }
 
 export interface StringifiedUserRecord {
@@ -45,6 +46,7 @@ export interface StringifiedUserRecord {
   activitiesTimeline: string,
   email: string,
   emailPreferences: string;
-  created: number;
-  updated: number;
+  timestamp: string;
+  updated: string;
+  timezone: string;
 }

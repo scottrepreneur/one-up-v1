@@ -44,7 +44,7 @@ const addRecord = (params: any) => {
 };
 
 export const getOrCreateUser = async (user: string) => {
-  const timestamp = new Date().getTime();
+  const timestamp = new Date().toISOString();
 
   const userRecord = await getUser(user);
 
@@ -55,7 +55,7 @@ export const getOrCreateUser = async (user: string) => {
   const newUserRecord: StringifiedUserRecord = {
     userId: user,
     currentGoal: 1,
-    goalHistory: JSON.stringify([{ goal: 1, created: timestamp }]),
+    goalHistory: JSON.stringify([{ goal: 1, timestamp }]),
     activities: JSON.stringify([]),
     activitiesTimeline: JSON.stringify([]),
     email: '',
@@ -63,8 +63,9 @@ export const getOrCreateUser = async (user: string) => {
       marketing: false,
       notifications: true,
     }),
-    created: timestamp,
+    timestamp,
     updated: timestamp,
+    timezone: 'America/Chicago', // handle other timezones
   };
 
   const newUserParams = {
@@ -97,9 +98,9 @@ export const updateUser = (params: any) => {
 
 export const addActivityToDb = async (
   account: string,
-  activityList: Array<ActivityRecord>,
+  activityList: ActivityRecord[],
 ) => {
-  const timestamp = new Date().getTime();
+  const timestamp = new Date().toISOString();
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
     Key: {
@@ -129,9 +130,9 @@ export const addActivityToDb = async (
 
 export const addActivityHistoryToDb = async (
   account: string,
-  userActivityHistory: Array<ActivityHistoryRecord>) => {
-  const timestamp = new Date().getTime();
-
+  userActivityHistory: ActivityHistoryRecord[],
+) => {
+  const timestamp = new Date().toISOString();
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
     Key: {

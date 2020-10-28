@@ -1,4 +1,4 @@
-export const DAY_START = 2;
+export const DAY_START = 7;
 export const TIMEZONE = 'America/Chicago';
 
 export const LEVELS = [

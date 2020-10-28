@@ -9,22 +9,12 @@ import {
 } from './utils';
 
 const addActivity: Function = async (event: APIGatewayEvent) => {
-  const timestamp = new Date().getTime();
-  const activity: {
-    activity: string,
-    name: string,
-    type: string,
-    category: string,
-    icon: string,
-    points: number,
-    cooldown: number,
-    frequency: number,
-    frequencyPeriod: string,
-  } = JSON.parse(event.body || '{}');
+  const timestamp = new Date().toISOString();
+  const activity: ActivityRecord = JSON.parse(event.body || '{}');
   // @ts-ignore
   const account = event.pathParameters.userId.toLowerCase();
   // @ts-ignore
-  let userActivities: Array<ActivityRecord> = [];
+  let userActivities: ActivityRecord[] = [];
 
   if (account) {
     const user = await getOrCreateUser(account);

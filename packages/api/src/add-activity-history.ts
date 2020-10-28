@@ -1,5 +1,11 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import {
+  sub,
+  parseISO,
+  isAfter,
+} from 'date-fns';
+
+import {
   corsSuccessResponse,
   corsErrorResponse,
   runWarm,
@@ -9,12 +15,12 @@ import {
 } from './utils';
 
 const addActivityHistory: Function = async (event: APIGatewayEvent) => {
-  const timestamp = new Date().getTime();
+  const timestamp = new Date().toISOString();
   // @ts-ignore
   const account = event.pathParameters.userId.toLowerCase();
   // @ts-ignore
   const activityKey = event.pathParameters.activityKey.toLowerCase();
-  let userActivityHistory: Array<ActivityHistoryRecord> = [];
+  let userActivityHistory: ActivityHistoryRecord[] = [];
 
   if (account) {
     try {
@@ -36,7 +42,10 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
             .sort((e: any) => e.timestamp)[0];
 
           // check cooldown has passed since last activity recorded
-          if (timestamp - lastActivity.timestamp > cooldown * 60 * 1000) {
+          if (isAfter(
+            sub(parseISO(timestamp), { minutes: cooldown }),
+            parseISO(lastActivity.timestamp),
+          )) {
             userActivityHistory.push({
               activity: activityKey,
               timestamp,
@@ -68,9 +77,9 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
             return corsErrorResponse({ error: err });
           }
         }
-
-        return corsErrorResponse({ error: `No activity found with key: ${activityKey}` });
       }
+
+      return corsErrorResponse({ error: `No activity found with key: ${activityKey}` });
     } catch (err) {
       console.log(err);
       return corsErrorResponse({ error: err });

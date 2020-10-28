@@ -1,6 +1,7 @@
-import moment from 'moment-timezone';
+import { parseISO, isAfter, sub} from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
-import { DAY_START } from '../constants';
+import { DAY_START, TIMEZONE } from '../constants';
 import { ActivityHistoryRecord, ActivityRecord } from './definitions';
 
 export { default as runWarm } from './run-warm';
@@ -20,12 +21,23 @@ export const getScore = (
 
   if (timeSince) {
     timeSinceActivities = activityHistory
-      .filter((e) => e.timestamp > Date.now() - timeSince);
+      .filter((e) => isAfter(parseISO(e.timestamp), sub(Date.now(), { minutes: timeSince })));
   } else {
     const today = new Date();
-    const timestamp: any = new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0);
+    let timestamp: any = null;
+    if (today.getHours() < 7) {
+      timestamp = zonedTimeToUtc(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, DAY_START, 0, 0),
+        TIMEZONE,
+      );
+    } else {
+      timestamp = zonedTimeToUtc(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0),
+        TIMEZONE,
+      );
+    }
     timeSinceActivities = activityHistory
-      .filter((e) => e.timestamp > timestamp);
+      .filter((e) => isAfter(parseISO(e.timestamp), timestamp));
   }
 
   const activitiesWithPoints = timeSinceActivities

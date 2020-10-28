@@ -1,4 +1,10 @@
-import moment from 'moment-timezone';
+import {
+  parseISO,
+  isAfter,
+  sub,
+  isBefore,
+} from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
 import { DAY_START, TIMEZONE } from '../constants';
 import {
@@ -13,7 +19,7 @@ const isDuringDay = (
   timeEnd: any,
 ) => {
   // console.log(value);
-  return value > timeStart && value < timeEnd;
+  return isAfter(value, timeStart) && isBefore(value, timeEnd);
 };
 
 export const getStreak = (
@@ -29,31 +35,36 @@ export const getStreak = (
   // console.log(activityHistory);
 
   // set time cut off
-  const daySeconds = 24 * 60 * 60 * 1000;
-  const today = new Date();
-  const timestamp: any = new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0); // .utc().subtract(1, 'day').format('YYYY-MM-DD'); // .tz('America/Chicago');
-  // console.log(timestamp);
+  const today = parseISO(new Date().toISOString());
+
+  let timestamp: any = null;
+  if (today.getHours() < 7) {
+    timestamp = zonedTimeToUtc(
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, DAY_START, 0, 0),
+      TIMEZONE,
+    );
+  } else {
+    timestamp = zonedTimeToUtc(
+      new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0),
+      TIMEZONE,
+    );
+  }
 
   do {
     // get last 0200 timestamp
     // filter activities since timestamp
-    // console.log('streak', streak);
     let activitiesForDay = [];
 
     if (streak === 0) {
       activitiesForDay = activityHistory.filter((e) => {
-        // console.log(e.timestamp > timestamp);
-        return e.timestamp > timestamp;
+        return isAfter(parseISO(e.timestamp), timestamp);
       });
     } else {
-      const timestampStart = new Date(timestamp - ((streak + 1) * daySeconds));
-      const timestampEnd = streak > 1 ? new Date(timestamp - ((streak) * daySeconds)) : timestamp;
-      // console.log('start', timestampStart.toString());
-      // console.log('end', timestampEnd);
+      const timestampStart = sub(timestamp, { days: streak + 1 });
+      const timestampEnd = streak > 1 ? sub(timestamp, { days: streak }) : timestamp;
       activitiesForDay = activityHistory
-        .filter((e) => isDuringDay(e.timestamp, timestampStart, timestampEnd));
+        .filter((e) => isDuringDay(parseISO(e.timestamp), timestampStart, timestampEnd));
     }
-    // console.log(activitiesForDay);
 
     const pointsForDay = activitiesForDay.map((e) => {
       const {
@@ -64,16 +75,13 @@ export const getStreak = (
     });
 
     const sumForDay = pointsForDay.reduce((a, b) => a + b, 0);
-    // console.log(sumForDay);
-    if (sumForDay && sumForDay > goal) {
+    if (sumForDay && sumForDay >= goal) {
       streak += 1;
     } else {
       streakBreak = true;
     }
   } while (streakBreak !== true);
-  // activityHistory.forEach(history => {
 
-  // });
   return streak;
 };
 

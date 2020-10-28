@@ -1,6 +1,7 @@
-import moment from 'moment-timezone';
+import { parseISO, isAfter } from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
-import { DAY_START } from '../constants';
+import { DAY_START, TIMEZONE } from '../constants';
 import { ActivityHistoryRecord, ActivityRecord } from './definitions';
 
 export const getActivities = (
@@ -12,12 +13,23 @@ export const getActivities = (
 
   if (timeSince) {
     timeSinceActivities = activityHistory
-      .filter((e) => e.timestamp > Date.now() - timeSince);
+      .filter((e) => isAfter(parseISO(e.timestamp), Date.now() - timeSince));
   } else {
     const today = new Date();
-    const timestamp: any = new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0);
+    let timestamp: any = null;
+    if (today.getHours() < 7) {
+      timestamp = zonedTimeToUtc(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, DAY_START, 0, 0),
+        TIMEZONE,
+      );
+    } else {
+      timestamp = zonedTimeToUtc(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0),
+        TIMEZONE,
+      );
+    }
     timeSinceActivities = activityHistory
-      .filter((e) => e.timestamp > timestamp);
+      .filter((e) => isAfter(parseISO(e.timestamp), timestamp));
   }
   const activitiesWithPoints = timeSinceActivities.map((item: ActivityHistoryRecord) => {
     const {
@@ -46,12 +58,23 @@ export const getActivitiesText = (
 
   if (timeSince) {
     timeSinceActivities = activityHistory
-      .filter((e) => e.timestamp > Date.now() - timeSince);
+      .filter((e) => isAfter(parseISO(e.timestamp), Date.now() - timeSince));
   } else {
-    const today = new Date();
-    const timestamp: any = new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0);
+    const today = parseISO(new Date().toISOString());
+    let timestamp: any = null;
+    if (today.getHours() < 7) {
+      timestamp = zonedTimeToUtc(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, DAY_START, 0, 0),
+        TIMEZONE,
+      );
+    } else {
+      timestamp = zonedTimeToUtc(
+        new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0),
+        TIMEZONE,
+      );
+    }
     timeSinceActivities = activityHistory
-      .filter((e) => e.timestamp > timestamp);
+      .filter((e) => isAfter(parseISO(e.timestamp), timestamp));
   }
 
   let activitiesTextString = '';
