@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 
+import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import App from './pages/App';
-import ThemeProvider, { GlobalStyle } from './theme';
+import { customTheme } from './theme';
 
 import ApplicationContextProvider, {
   Updater as ApplicationContextUpdater,
@@ -26,12 +27,12 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <ThemeProvider>
+  <ThemeProvider theme={customTheme}>
+    <CSSReset />
     <ContextProviders>
       <Updaters />
-      <GlobalStyle />
       <App />
     </ContextProviders>
   </ThemeProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

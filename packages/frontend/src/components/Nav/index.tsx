@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link as RouterLink } from 'react-router-dom';
+import { Flex, Image } from '@chakra-ui/core';
 
-import Column from '../Column';
-import Row from '../Row';
 
 const menuItems = [
   {
@@ -20,60 +18,27 @@ const menuItems = [
   },
 ];
 
-const NavWrapper = styled(Row)`
-  width: 100%;
-`;
-
-type ColumnProps = {
-  width: string;
-};
-
-const SplitColumn = styled(Column)<ColumnProps>`
-  width: ${({ width }) => width && width};
-  height: 75px;
-  justify-content: center;
-`;
-
-const Logo = styled.img`
-  height: 50px;
-  width: 100px;
-  margin-left: 10%;
-`;
-
-const MenuItems = styled(Row)``;
-
-const MenuLinks = styled(Link)`
-  width: 100px;
-  text-align: center;
-  text-decoration: none;
-  color: ${({ theme }) => theme.white};
-
-  :hover {
-    font-weight: bold;
-  }
-`;
-
 const Nav: FunctionComponent = () => {
   return (
-    <NavWrapper>
-      <SplitColumn width='70%'>
-        <Link to='/'>
-          <Logo src={require('../../assets/one-up-logo.png')} alt='1-up Logo' />
-        </Link>
-      </SplitColumn>
-      <SplitColumn width='30%'>
-        <MenuItems>
+    <Flex w='100%'>
+      <Flex w='70%' height='75px' align='center'>
+        <RouterLink to='/' style={{ paddingLeft: '105px'}}>
+          <Image src={require('../../assets/one-up-logo.png')} alt='1-up Logo' height={55}/>
+        </RouterLink>
+      </Flex>
+      <Flex w='30%' justify='center' height='75px'>
+        <Flex align='center'>
           {menuItems &&
             menuItems.map((item, i) => {
               return (
-                <MenuLinks to={item.link} key={i}>
+                <RouterLink to={item.link} key={i} style={{ padding: '5px', margin: '4px', textAlign: 'center', textDecoration: 'none', color: 'white'}}>
                   {item.label}
-                </MenuLinks>
+                </RouterLink>
               );
             })}
-        </MenuItems>
-      </SplitColumn>
-    </NavWrapper>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 
