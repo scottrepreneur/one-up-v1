@@ -9,9 +9,11 @@ import React, {
 import axios from 'axios';
 
 const ACTIVITY_HISTORY = 'ACTIVITY_HISTORY';
+const ACTIVITIES = 'ACTIVITIES';
 
 const UPDATE_DB_DATA = 'UPDATE_DB_DATA';
 const UPDATE_ACTIVITY_HISTORY = 'UPDATE_ACTIVITY_HISTORY';
+const UPDATE_ACTIVITIES = 'UPDATE_ACTIVITIES';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const ACCOUNT = process.env.REACT_APP_ACCOUNT;
@@ -34,7 +36,16 @@ function reducer(state, { type, payload }) {
         },
       };
     }
-
+    case UPDATE_ACTIVITIES: {
+      const { account, activities } = payload;
+      return {
+        ...state,
+        [account]: {
+          ...state?.[account],
+          [ACTIVITIES]: activities,
+        },
+      };
+    }
     case UPDATE_ACTIVITY_HISTORY: {
       const { account, activityHistory } = payload;
       return {
@@ -61,6 +72,13 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE_DB_DATA, payload: { account, accountStore } });
   }, []);
 
+  const updateActivities = useCallback((account, activities) => {
+    dispatch({
+      type: UPDATE_ACTIVITIES,
+      payload: { account, activities },
+    });
+  }, []);
+
   const updateActivityHistory = useCallback((account, activityHistory) => {
     dispatch({
       type: UPDATE_ACTIVITY_HISTORY,
@@ -75,10 +93,11 @@ export default function Provider({ children }) {
           state,
           {
             updateAccountStore,
+            updateActivities,
             updateActivityHistory,
           },
         ],
-        [state, updateAccountStore, updateActivityHistory]
+        [state, updateAccountStore, updateActivities, updateActivityHistory]
       )}
     >
       {children}
@@ -89,10 +108,10 @@ export default function Provider({ children }) {
 export function Updater() {
   const [
     ,
-    { updateAccountStore, updateActivityHistory },
+    { updateAccountStore, updateActivities, updateActivityHistory },
   ] = useApplicationContext();
 
-  // on account change, fetch all quests from firebase and save them in context
+  // on account change, fetch the user's current statusand save in context
   useEffect(() => {
     async function getAccount(account) {
       try {
@@ -105,7 +124,7 @@ export function Updater() {
     getAccount(ACCOUNT);
   }, [updateAccountStore]);
 
-  // on account change, fetch all quests from firebase and save them in context
+  // on account change, fetch all activivties from the API and save them in context
   useEffect(() => {
     async function getActivityHistory(account) {
       try {
@@ -120,6 +139,22 @@ export function Updater() {
     getActivityHistory(ACCOUNT);
   }, [updateActivityHistory]);
 
+  // on account change, fetch all activivties from the API and save them in context
+  useEffect(() => {
+    async function getActivities(account) {
+      try {
+        const result = await axios.get(
+          `${API_URL}/user/${account}/activities`
+        );
+        console.log(result.data);
+        updateActivities(account, result.data);
+      } catch (err) {
+        console.log('Error', err);
+      }
+    }
+    getActivities(ACCOUNT);
+  }, [updateActivities]);
+
   return null;
 }
 
@@ -133,4 +168,10 @@ export function useActivityHistory() {
   const [state] = useApplicationContext();
   const activityHistory = state?.[ACCOUNT]?.[ACTIVITY_HISTORY];
   return activityHistory;
+}
+
+export function useActivities() {
+  const [state] = useApplicationContext();
+  const activities = state?.[ACCOUNT]?.[ACTIVITIES];
+  return activities;
 }
