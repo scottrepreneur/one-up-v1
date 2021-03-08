@@ -2,14 +2,19 @@ import React, { FunctionComponent } from 'react';
 import {
   Box, Text, Flex, useTheme,
 } from '@chakra-ui/react';
+import { useHistory } from 'react-router';
 
 import { useUser } from '../../contexts/UserContext';
 import { ActivityRecord } from '../../utils';
 
 const ActivityList: FunctionComponent = () => {
   const { activities } = useUser();
+  const history = useHistory();
   const theme = useTheme();
   console.log(activities);
+  const handleClick = (activity: string) => {
+    history.push(`/activity/${activity}`);
+  };
 
   return (
     <Box w='70%' m='0 auto'>
@@ -17,7 +22,7 @@ const ActivityList: FunctionComponent = () => {
       <Box pt={20}>
         {activities ? (
           activities.map((activity: ActivityRecord) => (
-            <Flex key={activity.activity} _hover={{ cursor: 'pointer', backgroundColor: theme.colors.blue[500] }} py={3}>
+            <Flex key={activity.activity} _hover={{ cursor: 'pointer', backgroundColor: theme.colors.blue[500] }} py={3} onClick={() => handleClick(activity.activity)}>
               <Flex w='50%' direction='column' align='center' color='white'>
                 {activity.name}
               </Flex>

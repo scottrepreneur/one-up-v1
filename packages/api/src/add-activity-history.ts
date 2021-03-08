@@ -28,7 +28,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
 
       userActivityHistory = JSON.parse(user.activitiesTimeline);
       const userActivities = JSON.parse(user.activities);
-      console.log(userActivityHistory);
+      // console.log(userActivityHistory);
 
       // check the activity exists for the user
       if (userActivities.filter((e: any) => e.activity === activityKey).length > 0) {
@@ -40,10 +40,8 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
         if (userActivityHistory.filter((e: any) => e.activity === activityKey).length > 0) {
           const lastActivity: ActivityHistoryRecord = userActivityHistory
             .filter((e: any) => e.activity === activityKey)
-            .sort((e: any) => e.timestamp)[0];
-
-          const coolDownTime = sub(parseISO(timestamp), { minutes: cooldown });
-          console.log(coolDownTime);
+            .sort((a: any, b: any) => parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime())[0];
+          console.log(lastActivity);
 
           // check cooldown has passed since last activity recorded
           if (isAfter(
@@ -54,11 +52,11 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
               activity: activityKey,
               timestamp,
             });
-            console.log(userActivityHistory);
+            // console.log(userActivityHistory);
 
             try {
-              const result = await addActivityHistoryToDb(account, userActivityHistory);
-              console.log(result);
+              await addActivityHistoryToDb(account, userActivityHistory);
+              // console.log(result);
               return corsSuccessResponse({ success: true });
             } catch (err) {
               return corsErrorResponse({ error: err });

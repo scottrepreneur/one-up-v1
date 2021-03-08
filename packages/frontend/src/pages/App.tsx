@@ -12,37 +12,37 @@ import ActivityHistory from './ActivityHistory';
 import ActivityList from './ActivityList';
 
 const App: FunctionComponent = () => (
-  <Flex flexWrap="wrap" align="flex-start" minHeight="100vh" height="100%" width="100%" background='#212121'>
-    <Flex direction="column" w="100%" h="100%" justify="flex-start" align="flex-start" flex="1" overflow="auto">
+  <Flex flexWrap='wrap' align='flex-start' minHeight='100vh' height='100%' width='100%' background='#212121'>
+    <Flex direction='column' w='100%' h='100%' justify='flex-start' align='flex-start' flex='1' overflow='auto'>
       <HashRouter>
         <Nav />
         <Switch>
           <Route
             exact
             strict
-            path="/activity/history"
+            path='/activity/history'
             component={() => <ActivityHistory />}
           />
           <Route
             exact
             strict
-            path="/activity/list"
+            path='/activity/list'
             component={() => <ActivityList />}
           />
           <Route
             exact
             strict
-            path="/activity/create"
+            path='/activity/create'
             component={() => <ActivityCreate />}
           />
           <Route
             exact
             strict
-            path="/activity/:activity"
+            path='/activity/:activity'
             component={() => <ActivityDetail />}
           />
-          <Route exact strict path="/" component={() => <Dashboard />} />
-          <Redirect to="/" />
+          <Route exact strict path='/' component={() => <Dashboard />} />
+          <Redirect to='/' />
         </Switch>
       </HashRouter>
     </Flex>

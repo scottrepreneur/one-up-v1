@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 
 import { ChakraProvider } from '@chakra-ui/react';
 import App from './pages/App';
-import { customTheme } from './theme';
+import { theme } from './theme';
+import './index.css';
 
 import { UserContextProvider } from './contexts/UserContext';
 
@@ -25,7 +26,7 @@ function ContextProviders({ children }: ContextProps) {
 // }
 
 ReactDOM.render(
-  <ChakraProvider theme={customTheme}>
+  <ChakraProvider theme={theme}>
     <ContextProviders>
       {/* <Updaters /> */}
       <App />

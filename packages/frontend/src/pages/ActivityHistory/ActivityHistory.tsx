@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text, Flex } from '@chakra-ui/react';
-import { parseISO } from 'date-fns';
+import { parseISO, formatDistanceToNow } from 'date-fns';
 
 import { useUser } from '../../contexts/UserContext';
 import { ExtendedActivityHistoryRecord } from '../../utils';
@@ -13,8 +13,9 @@ const ActivityHistory: React.FC = () => {
   useEffect(() => {
     if (activityHistory) {
       const tempHistory = activityHistory?.sort(
-        // @ts-ignore
-        (a: ExtendedActivityHistoryRecord, b: ExtendedActivityHistoryRecord) => parseISO(b.timestamp) - parseISO(a.timestamp)
+        (a: ExtendedActivityHistoryRecord, b: ExtendedActivityHistoryRecord) => (
+          parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime()
+        ),
       );
       setSortedHistory(tempHistory);
     }
@@ -33,7 +34,7 @@ const ActivityHistory: React.FC = () => {
           <Flex key={h.timestamp} w='90%' h='45px' m='0 auto' justify='space-between'>
             <Box color='white' w='30%'>{h.name}</Box>
             <Box color='white' w='30%'>{h.points}</Box>
-            <Box color='white' w='40%'>{h.timestamp}</Box>
+            <Box color='white' w='40%'>{`${formatDistanceToNow(parseISO(h.timestamp))} ago`}</Box>
           </Flex>
         ))}
       </Box>

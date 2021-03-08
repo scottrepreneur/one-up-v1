@@ -19,19 +19,35 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
   const [activityHistory, setActivityHistory] = useState([]);
   const [activities, setActivities] = useState([]);
 
-  useEffect(() => {
+  const getActivityHistory = () => {
     axios.get(`${API_URL}/user/${ADDRESS}/activities/history`).then((res) => {
       setActivityHistory(res.data);
     });
+  };
 
+  const getActivities = () => {
     axios.get(`${API_URL}/user/${ADDRESS}/activities`).then((res) => {
       setActivities(res.data);
     });
+  };
 
+  const getUser = () => {
     axios.get(`${API_URL}/user/${ADDRESS}`).then((res) => {
       setUserData(res.data);
     });
+  };
+
+  useEffect(() => {
+    getUser();
+    getActivityHistory();
+    getActivities();
   }, []);
+
+  const recordActivity = async (activity) => {
+    await axios.post(`${API_URL}/user/${ADDRESS}/activities/${activity}`).then((res) => {
+      getActivityHistory();
+    });
+  };
 
   return (
     <UserContext.Provider
@@ -39,6 +55,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
         userData,
         activityHistory,
         activities,
+        recordActivity,
       }}
     >
       {children}
@@ -51,10 +68,12 @@ export const useUser = () => {
     userData,
     activityHistory,
     activities,
+    recordActivity,
   } = useContext(UserContext);
   return {
     userData,
     activityHistory,
     activities,
+    recordActivity,
   };
 };
