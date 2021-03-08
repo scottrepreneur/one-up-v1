@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Box, Text } from '@chakra-ui/core';
+import { Box, Text } from '@chakra-ui/react';
 
 const Dashboard: FunctionComponent = () => {
   return (

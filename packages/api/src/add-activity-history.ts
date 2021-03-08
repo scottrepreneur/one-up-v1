@@ -34,12 +34,16 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
       if (userActivities.filter((e: any) => e.activity === activityKey).length > 0) {
         console.log(activityKey);
         const { cooldown } = userActivities.filter((e: any) => e.activity === activityKey)[0];
+        console.log(cooldown);
 
         // activity has been recorded in timeline before
         if (userActivityHistory.filter((e: any) => e.activity === activityKey).length > 0) {
           const lastActivity: ActivityHistoryRecord = userActivityHistory
             .filter((e: any) => e.activity === activityKey)
             .sort((e: any) => e.timestamp)[0];
+
+          const coolDownTime = sub(parseISO(timestamp), { minutes: cooldown });
+          console.log(coolDownTime);
 
           // check cooldown has passed since last activity recorded
           if (isAfter(

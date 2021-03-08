@@ -1,0 +1,13 @@
+[
+  { "activity": "made-bed", "timestamp": "2020-10-19T18:58:59.600Z" },
+  { "activity": "shower", "timestamp": "2020-10-21T21:32:04.229Z" },
+  { "activity": "teeth", "timestamp": "2020-10-22T11:17:48.864Z" },
+  { "activity": "teeth", "timestamp": "2020-10-23T14:30:16.721Z" },
+  { "activity": "made-bed", "timestamp": "2020-10-24T01:44:59.262Z" },
+  { "activity": "teeth", "timestamp": "2020-10-24T16:15:45.781Z" },
+  { "activity": "teeth", "timestamp": "2020-10-24T22:13:38.707Z" },
+  { "activity": "teeth", "timestamp": "2020-10-25T15:00:25.427Z" },
+  { "activity": "teeth", "timestamp": "2020-10-25T21:28:05.597Z" },
+  { "activity": "shower", "timestamp": "2020-10-26T02:34:54.910Z" },
+  { "activity": "made-bed", "timestamp": "2020-10-27T14:40:44.777Z" }
+]

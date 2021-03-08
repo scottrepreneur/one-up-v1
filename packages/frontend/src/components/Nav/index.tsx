@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Flex, Image } from '@chakra-ui/core';
+import { Flex, Image } from '@chakra-ui/react';
 
 
 const menuItems = [

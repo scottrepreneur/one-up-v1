@@ -1,38 +1,35 @@
 import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { ChakraProvider } from '@chakra-ui/react';
 import App from './pages/App';
 import { customTheme } from './theme';
 
-import ApplicationContextProvider, {
-  Updater as ApplicationContextUpdater,
-} from './contexts/Application';
+import { UserContextProvider } from './contexts/UserContext';
 
-interface IProps {
+interface ContextProps {
   children: ReactNode;
   // any other props that come into the component
 }
 
-function ContextProviders({ children }: IProps) {
-  return <ApplicationContextProvider>{children}</ApplicationContextProvider>;
+function ContextProviders({ children }: ContextProps) {
+  return <UserContextProvider>{children}</UserContextProvider>;
 }
 
-function Updaters() {
-  return (
-    <>
-      <ApplicationContextUpdater />
-    </>
-  );
-}
+// function Updaters() {
+//   return (
+//     <>
+//       <ApplicationContextUpdater />
+//     </>
+//   );
+// }
 
 ReactDOM.render(
-  <ThemeProvider theme={customTheme}>
-    <CSSReset />
+  <ChakraProvider theme={customTheme}>
     <ContextProviders>
-      <Updaters />
+      {/* <Updaters /> */}
       <App />
     </ContextProviders>
-  </ThemeProvider>,
+  </ChakraProvider>,
   document.getElementById('root'),
 );
