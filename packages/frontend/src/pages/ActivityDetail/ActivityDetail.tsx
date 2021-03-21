@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   Box, Flex, Heading, Button, Stack, Spinner, HStack,
 } from '@chakra-ui/react';
@@ -7,7 +7,8 @@ import { useUser } from '../../contexts/UserContext';
 
 const ActivityDetail: React.FC = () => {
   const { activity } = useParams();
-  const { activities } = useUser();
+  const history = useHistory();
+  const { activities, recordActivity } = useUser();
   const [activityData, setActivityData] = useState<any>();
 
   useEffect(() => {
@@ -43,8 +44,8 @@ const ActivityDetail: React.FC = () => {
           </Stack>
           <Flex w='100%' justify='flex-end'>
             <HStack spacing={4}>
-              <Button variant='outline'>Edit</Button>
-              <Button variant='primary'>Record Now</Button>
+              <Button variant='outline' onClick={() => history.push(`/activity/${activity}/edit`)}>Edit</Button>
+              <Button variant='primary' onClick={() => recordActivity(activity)}>Record Now</Button>
             </HStack>
           </Flex>
         </>

@@ -102,6 +102,12 @@ functions:
       - http:
           path: user/{userId}/activities
           method: post
+  update-activity:
+    handler: src/update-activity.default
+    events:
+      - http:
+          path: user/{userId}/activities/{activityKey}/edit
+          method: put
   add-activity-history:
     handler: src/add-activity-history.default
     events:

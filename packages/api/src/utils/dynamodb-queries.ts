@@ -12,9 +12,9 @@ const getUser = async (
 }> => {
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
-    KeyConditionExpression: 'userId = :hkey',
+    KeyConditionExpression: 'userId = :userId',
     ExpressionAttributeValues: {
-      ':hkey': user,
+      ':userId': user,
     },
   };
 
@@ -30,18 +30,16 @@ const getUser = async (
   });
 };
 
-const addRecord = (params: any) => {
-  return new Promise((res, rej) => {
-    dynamoDb.put(params, (err: any, data: any) => {
-      if (err) {
-        console.log('Error', err);
-        rej(err);
-      } else {
-        res(data);
-      }
-    });
+const addRecord = (params: any) => new Promise((res, rej) => {
+  dynamoDb.put(params, (err: any, data: any) => {
+    if (err) {
+      console.log('Error', err);
+      rej(err);
+    } else {
+      res(data);
+    }
   });
-};
+});
 
 export const getOrCreateUser = async (user: string) => {
   const timestamp = new Date().toISOString();
@@ -83,18 +81,16 @@ export const getOrCreateUser = async (user: string) => {
   }
 };
 
-export const updateUser = (params: any) => {
-  return new Promise((res, rej) => {
-    dynamoDb.update(params, (err: any, data: any) => {
-      if (err) {
-        console.log('Error', err);
-        rej(err);
-      } else {
-        res(data);
-      }
-    });
+export const updateUser = (params: any) => new Promise((res, rej) => {
+  dynamoDb.update(params, (err: any, data: any) => {
+    if (err) {
+      console.log('Error', err);
+      rej(err);
+    } else {
+      res(data);
+    }
   });
-};
+});
 
 export const addActivityToDb = async (
   account: string,
@@ -147,6 +143,37 @@ export const addActivityHistoryToDb = async (
       ':updated': timestamp,
     },
     UpdateExpression: 'SET #activitiesTimeline = :activitiesTimeline, #updated = :updated',
+    ReturnValues: 'ALL_NEW',
+  };
+
+  try {
+    const result = await updateUser(params);
+    return result;
+  } catch (err) {
+    console.log(err);
+    return { error: err };
+  }
+};
+
+export const updateActivities = async (
+  account: string,
+  activities: ActivityRecord[],
+) => {
+  const timestamp = new Date().toISOString();
+  const params: any = {
+    TableName: process.env.DYNAMODB_USERS_TABLE,
+    Key: {
+      userId: account,
+    },
+    ExpressionAttributeNames: {
+      '#activities': 'activities',
+      '#updated': 'updated',
+    },
+    ExpressionAttributeValues: {
+      ':activities': JSON.stringify(activities),
+      ':updated': timestamp,
+    },
+    UpdateExpression: 'SET #activities = :activities, #updated = :updated',
     ReturnValues: 'ALL_NEW',
   };
 

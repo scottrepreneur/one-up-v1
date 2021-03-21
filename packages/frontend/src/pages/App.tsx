@@ -7,6 +7,7 @@ import {
 import Nav from '../components/Nav';
 import Dashboard from './Dashboard';
 import ActivityCreate from './ActivityCreate';
+import ActivityEdit from './ActivityEdit';
 import ActivityDetail from './ActivityDetail';
 import ActivityHistory from './ActivityHistory';
 import ActivityList from './ActivityList';
@@ -40,6 +41,12 @@ const App: FunctionComponent = () => (
             strict
             path='/activity/:activity'
             component={() => <ActivityDetail />}
+          />
+          <Route
+            exact
+            strict
+            path='/activity/:activity/edit'
+            component={() => <ActivityEdit />}
           />
           <Route exact strict path='/' component={() => <Dashboard />} />
           <Redirect to='/' />

@@ -49,6 +49,19 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
     });
   };
 
+  const createActivity = async (activity) => {
+    await axios.post(`${API_URL}/user/${ADDRESS}/activities`, activity).then((res) => {
+      setActivities(res.data.activities);
+    });
+  };
+
+  const updateActivity = async (activity) => {
+    await axios.put(`${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`, activity).then((res) => {
+      console.log(res);
+      setActivities(res.data.activities);
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -56,6 +69,8 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
         activityHistory,
         activities,
         recordActivity,
+        createActivity,
+        updateActivity,
       }}
     >
       {children}
@@ -69,11 +84,15 @@ export const useUser = () => {
     activityHistory,
     activities,
     recordActivity,
+    createActivity,
+    updateActivity,
   } = useContext(UserContext);
   return {
     userData,
     activityHistory,
     activities,
     recordActivity,
+    createActivity,
+    updateActivity,
   };
 };
