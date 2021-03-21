@@ -26,6 +26,14 @@ export const customTheme = {
 };
 
 export const theme = extendTheme({
+  colors: {
+    // ...theme.colors,
+    brand: {
+      900: '#1a365d',
+      800: '#153e75',
+      700: '#2a69ac',
+    },
+  },
   styles: {
     global: {
       'html, body': {
@@ -35,6 +43,36 @@ export const theme = extendTheme({
       },
       a: {
         _hover: { textDecoration: 'none' },
+      },
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        textTransform: 'uppercase',
+        fontWeight: 700,
+        _hover: {
+          fontWeight: 900,
+        },
+      },
+      variants: {
+        primary: {
+          bg: 'brand.900',
+          color: 'white',
+          _hover: {
+            bg: 'brand.800',
+          },
+        },
+        outline: {
+          bg: 'transparent',
+          border: '1px',
+          borderColor: 'brand.700',
+          color: 'brand.700',
+          _hover: {
+            bg: 'brand.900',
+            color: 'whiteAlpha.800',
+          },
+        },
       },
     },
   },
