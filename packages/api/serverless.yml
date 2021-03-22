@@ -38,7 +38,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/one-up-api-users-dev'
+        - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_USERS_TABLE}'
 
 custom:
   webpack:
@@ -53,7 +53,7 @@ custom:
     concurrency: 1
   prune:
     automatic: true
-    number: 5 # Number of versions to keep
+    number: 1 # Number of versions to keep
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
