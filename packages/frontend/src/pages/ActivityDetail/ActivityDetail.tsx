@@ -4,11 +4,13 @@ import {
   Box, Flex, Heading, Button, Stack, Spinner, HStack,
 } from '@chakra-ui/react';
 import { useUser } from '../../contexts/UserContext';
+import { useOverlay } from '../../contexts/OverlayContext';
 
 const ActivityDetail: React.FC = () => {
   const { activity } = useParams();
   const history = useHistory();
   const { activities, recordActivity } = useUser();
+  const { successToast, errorToast } = useOverlay();
   const [activityData, setActivityData] = useState<any>();
 
   useEffect(() => {
@@ -25,9 +27,27 @@ const ActivityDetail: React.FC = () => {
     [{ label: 'Cooldown', param: 'cooldown' }, { label: 'Points', param: 'points' }],
   ];
 
+  const editActivity = () => {
+    history.push(`/activity/${activity}/edit`);
+  };
+
+  const submitRecordActivity = async () => {
+    const result = await recordActivity(activity);
+    if (!result.error) {
+      successToast({
+        title: 'Recorded Activity',
+      });
+      history.push('/activity/history');
+    } else {
+      errorToast({
+        title: 'Error',
+      });
+    }
+  };
+
   return (
     <Flex align='center' direction='column' m='30px auto' w='40%'>
-      <Heading size='md' mb={6}>Activity Detail</Heading>
+      <Heading size='xl' mb={6}>Activity Detail</Heading>
       {activityData ? (
         <>
           <Stack spacing={3} w='100%'>
@@ -44,8 +64,8 @@ const ActivityDetail: React.FC = () => {
           </Stack>
           <Flex w='100%' justify='flex-end'>
             <HStack spacing={4}>
-              <Button variant='outline' onClick={() => history.push(`/activity/${activity}/edit`)}>Edit</Button>
-              <Button variant='primary' onClick={() => recordActivity(activity)}>Record Now</Button>
+              <Button variant='outline' onClick={editActivity}>Edit</Button>
+              <Button variant='primary' onClick={submitRecordActivity}>Record Now</Button>
             </HStack>
           </Flex>
         </>

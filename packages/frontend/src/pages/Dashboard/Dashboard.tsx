@@ -1,10 +1,44 @@
 import React, { FunctionComponent } from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import {
+  Box, Heading, Flex, Spinner, Stack, HStack,
+} from '@chakra-ui/react';
+import { useUser } from '../../contexts/UserContext';
 
 const Dashboard: FunctionComponent = () => {
+  const { userData } = useUser();
+  console.log(userData);
+
   return (
     <Box w='70%' m='0 auto'>
-      <Text textAlign='center' color='white'>Dashboard</Text>
+      <Heading size='xl' textAlign='center' color='white'>Dashboard</Heading>
+      {userData ? (
+        <Stack spacing={6}>
+          <Flex justify='space-between' my={100}>
+            <Flex as={Stack} direction='column' align='center' spacing={4}>
+              <Heading size='md'>Points Today</Heading>
+              <Heading size='2xl'>{userData?.pointsToday}</Heading>
+            </Flex>
+            <Flex as={Stack} direction='column' align='center' spacing={4}>
+              <Heading size='md'>Current Goal</Heading>
+              <Heading size='2xl'>{userData?.currentGoal}</Heading>
+            </Flex>
+            <Flex as={Stack} direction='column' align='center' spacing={4}>
+              <Heading size='md'>Current Streak</Heading>
+              <Heading size='2xl'>{userData?.currentStreak}</Heading>
+            </Flex>
+          </Flex>
+          <Flex as={HStack} spacing={6} justify='center'>
+            <Box>
+              <Box>Last Activity</Box>
+              <Box>{userData?.lastActivity?.name}</Box>
+            </Box>
+          </Flex>
+        </Stack>
+      ) : (
+        <Flex w='100%' h='250px' align='center' justify='center'>
+          <Spinner size='xl' />
+        </Flex>
+      )}
     </Box>
   );
 };

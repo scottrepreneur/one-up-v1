@@ -7,6 +7,7 @@ import {
   getScore,
   getActivities,
   getActivitiesText,
+  getLastActivity,
   getStreak,
 } from './utils';
 
@@ -29,6 +30,10 @@ const getUser: Function = async (event: APIGatewayEvent) => {
         JSON.parse(user.activitiesTimeline),
       ),
       activitiesTodayText: getActivitiesText(
+        JSON.parse(user.activities),
+        JSON.parse(user.activitiesTimeline),
+      ),
+      lastActivity: getLastActivity(
         JSON.parse(user.activities),
         JSON.parse(user.activitiesTimeline),
       ),

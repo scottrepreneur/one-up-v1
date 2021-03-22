@@ -29,7 +29,7 @@ const updateActivity: Function = async (event: APIGatewayEvent) => {
       console.log(result);
 
       return corsSuccessResponse({
-        activities: activitiesList,
+        activities: updatedActivities,
       });
     } catch (err) {
       console.log(err);

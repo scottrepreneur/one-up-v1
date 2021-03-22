@@ -15,51 +15,82 @@ interface UserContextProps {
 
 export const UserContextProvider: React.FC<UserContextProps> = ({ children }: UserContextProps) => {
   // const { address } = useInjectedProvider();
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [activityHistory, setActivityHistory] = useState([]);
   const [activities, setActivities] = useState([]);
 
-  const getActivityHistory = () => {
-    axios.get(`${API_URL}/user/${ADDRESS}/activities/history`).then((res) => {
-      setActivityHistory(res.data);
-    });
+  const getActivityHistory = async () => {
+    try {
+      const result = await axios.get(`${API_URL}/user/${ADDRESS}/activities/history`);
+      setActivityHistory(result.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const getActivities = () => {
-    axios.get(`${API_URL}/user/${ADDRESS}/activities`).then((res) => {
-      setActivities(res.data);
-    });
+  const getActivities = async () => {
+    try {
+      const result = await axios.get(`${API_URL}/user/${ADDRESS}/activities`);
+      setActivities(result.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const getUser = () => {
-    axios.get(`${API_URL}/user/${ADDRESS}`).then((res) => {
-      setUserData(res.data);
-    });
+  const getUser = async () => {
+    try {
+      const result = await axios.get(`${API_URL}/user/${ADDRESS}`);
+      setUserData(result.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
-    getUser();
-    getActivityHistory();
-    getActivities();
+    const getData = async () => {
+      await getUser();
+      await getActivityHistory();
+      await getActivities();
+      setLoading(false);
+    };
+    getData();
   }, []);
 
   const recordActivity = async (activity) => {
-    await axios.post(`${API_URL}/user/${ADDRESS}/activities/${activity}`).then((res) => {
+    try {
+      const result = await axios.post(`${API_URL}/user/${ADDRESS}/activities/${activity}`);
+      console.log(result);
+      // TODO return history here instead
       getActivityHistory();
-    });
+      return activity;
+    } catch (err) {
+      console.log(err);
+      return { error: true };
+    }
   };
 
   const createActivity = async (activity) => {
-    await axios.post(`${API_URL}/user/${ADDRESS}/activities`, activity).then((res) => {
-      setActivities(res.data.activities);
-    });
+    try {
+      const result = await axios.post(`${API_URL}/user/${ADDRESS}/activities`, activity);
+      setActivities(result.data.activities);
+      return activity;
+    } catch (err) {
+      console.log(err);
+      return { error: true };
+    }
   };
 
   const updateActivity = async (activity) => {
-    await axios.put(`${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`, activity).then((res) => {
-      console.log(res);
-      setActivities(res.data.activities);
-    });
+    try {
+      const result = await axios.put(`${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`, activity);
+      setActivities(result.data.activities);
+      const updatedActivity = result.data.activities[result.data.activities.length - 1];
+      return updatedActivity;
+    } catch (err) {
+      console.log(err);
+      return { error: true };
+    }
   };
 
   return (
@@ -71,6 +102,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
         recordActivity,
         createActivity,
         updateActivity,
+        loading,
       }}
     >
       {children}
@@ -86,6 +118,7 @@ export const useUser = () => {
     recordActivity,
     createActivity,
     updateActivity,
+    loading,
   } = useContext(UserContext);
   return {
     userData,
@@ -94,5 +127,6 @@ export const useUser = () => {
     recordActivity,
     createActivity,
     updateActivity,
+    loading,
   };
 };

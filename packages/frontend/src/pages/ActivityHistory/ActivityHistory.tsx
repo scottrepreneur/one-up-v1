@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Text, Flex } from '@chakra-ui/react';
+import {
+  Box, Heading, Flex, Spinner,
+} from '@chakra-ui/react';
 import { parseISO, formatDistanceToNow } from 'date-fns';
 
 import { useUser } from '../../contexts/UserContext';
@@ -22,23 +24,29 @@ const ActivityHistory: React.FC = () => {
   }, [activityHistory]);
 
   return (
-    <Box w='70%' m='0 auto' textAlign='center'>
-      <Text fontSize='2rem' fontWeight={700} textAlign='center' mt={25} color='white'>Activity History</Text>
-      <Box mt={20}>
-        <Flex w='90%' h='45px' m='0 auto' justify='space-between'>
-          <Box color='white' w='30%'>Activity</Box>
-          <Box color='white' w='30%'>Points</Box>
-          <Box color='white' w='40%'>Date</Box>
-        </Flex>
-        {sortedHistory?.map((h: ExtendedActivityHistoryRecord) => (
-          <Flex key={h.timestamp} w='90%' h='45px' m='0 auto' justify='space-between'>
-            <Box color='white' w='30%'>{h.name}</Box>
-            <Box color='white' w='30%'>{h.points}</Box>
-            <Box color='white' w='40%'>{`${formatDistanceToNow(parseISO(h.timestamp))} ago`}</Box>
+    <Flex w='70%' m='0 auto' direction='column' align='center' justify='center'>
+      <Heading size='xl' color='white'>Activity History</Heading>
+      {sortedHistory.length ? (
+        <Box mt={20} w='100%'>
+          <Flex w='90%' h='45px' m='0 auto' justify='space-between'>
+            <Box color='white' w='30%' textAlign='center'>Activity</Box>
+            <Box color='white' w='30%' textAlign='center'>Points</Box>
+            <Box color='white' w='30%' textAlign='center'>Date</Box>
           </Flex>
-        ))}
-      </Box>
-    </Box>
+          {sortedHistory?.map((h: ExtendedActivityHistoryRecord) => (
+            <Flex key={h.timestamp} w='90%' h='45px' m='0 auto' justify='space-between'>
+              <Box color='white' w='30%' textAlign='center'>{h.name}</Box>
+              <Box color='white' w='30%' textAlign='center'>{h.points}</Box>
+              <Box color='white' w='30%' textAlign='center'>{`${formatDistanceToNow(parseISO(h.timestamp))} ago`}</Box>
+            </Flex>
+          ))}
+        </Box>
+      ) : (
+        <Flex w='100%' h='250px' align='center' justify='center'>
+          <Spinner size='xl' />
+        </Flex>
+      )}
+    </Flex>
   );
 };
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Input, Button, Flex, Stack,
+  Box, Input, Button, Flex, Stack, HStack,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
+import { useHistory } from 'react-router';
+import { useOverlay } from '../../contexts/OverlayContext';
 import { ActivityRecord } from '../../utils';
 
 interface ActivityFormProps {
@@ -17,6 +19,8 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
   activity, activities, updateActivity, createActivity,
 }: ActivityFormProps) => {
   const { register, handleSubmit, errors } = useForm();
+  const { successToast, errorToast } = useOverlay();
+  const history = useHistory();
   const usedKeys = activities?.map((a: ActivityRecord) => a.activity);
   const [activityData, setActivityData] = useState({});
   // console.log(activities);
@@ -37,7 +41,8 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
         key: 'activity',
         placeholder: 'dog-walk',
         hint: 'lowercase, no spaces or special characters. hyphen only.',
-        // validation: (value: any): boolean => !usedKeys.includes(value),
+        validation: (value: any): boolean => (
+          activity ? usedKeys.includes(value) : !usedKeys.includes(value)),
       },
     ],
     [
@@ -62,14 +67,44 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
     hint?: string;
   }
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log(activity);
     console.log(data);
     if (activity) {
-      updateActivity(data);
+      const result = await updateActivity(data);
+      console.log(result);
+      if (!result.error) {
+        // return task name
+        successToast({
+          title: 'Updated Activity',
+          description: `Updated ${result.name}`,
+        });
+      } else {
+        errorToast({
+          title: 'Error updating activity',
+        });
+      }
     } else {
-      createActivity(data);
+      const result = await createActivity(data);
+
+      if (!result.error) {
+        successToast({
+          title: 'Created Activity',
+          description: '',
+        });
+      } else {
+        errorToast({
+          title: 'Error',
+          description: result.error,
+        });
+      }
     }
+  };
+
+  const onCancel = () => {
+    activity
+      ? history.push(`/activity/${activity}`)
+      : history.push('/activity/list');
   };
 
   return (
@@ -99,7 +134,10 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
       {errors && <span>{errors[0]?.msg}</span>}
 
       <Flex justify='flex-end' my={6}>
-        <Button variant='primary' type='submit'>Submit</Button>
+        <HStack spacing={6}>
+          <Button variant='outline' onClick={onCancel}>Cancel</Button>
+          <Button variant='primary' type='submit'>{activity ? 'Update' : 'Create'}</Button>
+        </HStack>
       </Flex>
     </Box>
   );

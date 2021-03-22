@@ -47,6 +47,11 @@ export const theme = extendTheme({
     },
   },
   components: {
+    Heading: {
+      baseStyle: {
+        fontFamily: 'calling-code',
+      },
+    },
     Button: {
       baseStyle: {
         textTransform: 'uppercase',

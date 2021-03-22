@@ -7,6 +7,7 @@ import { theme } from './theme';
 import './index.css';
 
 import { UserContextProvider } from './contexts/UserContext';
+import { OverlayContextProvider } from './contexts/OverlayContext';
 
 interface ContextProps {
   children: ReactNode;
@@ -14,7 +15,13 @@ interface ContextProps {
 }
 
 function ContextProviders({ children }: ContextProps) {
-  return <UserContextProvider>{children}</UserContextProvider>;
+  return (
+    <OverlayContextProvider>
+      <UserContextProvider>
+        {children}
+      </UserContextProvider>
+    </OverlayContextProvider>
+  );
 }
 
 // function Updaters() {

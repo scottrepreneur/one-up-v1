@@ -1,4 +1,6 @@
-import { parseISO, isAfter, formatDistanceToNow } from 'date-fns';
+import {
+  parseISO, isAfter, formatDistanceToNow,
+} from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 
 import { DAY_START, TIMEZONE } from '../constants';
@@ -62,6 +64,7 @@ export const getActivitiesText = (
   } else {
     const today = parseISO(new Date().toISOString());
     let timestamp: any = null;
+    // if past 00 UTC (for central time)
     if (today.getHours() < 7) {
       timestamp = zonedTimeToUtc(
         new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, DAY_START, 0, 0),
@@ -80,10 +83,27 @@ export const getActivitiesText = (
   let activitiesTextString = '';
 
   timeSinceActivities.forEach((item: ActivityHistoryRecord) => {
-    const { points, name } = activities.filter((a) => a.activity === item.activity)[0];
+    const { points, name } = activities.find((a) => a.activity === item.activity);
 
     activitiesTextString = `${name} | ${points} points | ${formatDistanceToNow(parseISO(item.timestamp))} ago\n`.concat(activitiesTextString);
   });
 
   return activitiesTextString;
+};
+
+export const getLastActivity = (
+  activities: ActivityRecord[],
+  activityHistory: ActivityHistoryRecord[],
+) => {
+  const test = activityHistory.sort((a, b) => (
+    isAfter(parseISO(b.timestamp), parseISO(a.timestamp)) ? -1 : 1
+  ));
+  const last: any = test[0];
+  const lastActivity = activities.find((activity) => activity.activity === last.activity);
+  return {
+    name: lastActivity?.name,
+    points: lastActivity?.points,
+    icon: lastActivity?.icon,
+    timestamp: last.timestamp,
+  };
 };
