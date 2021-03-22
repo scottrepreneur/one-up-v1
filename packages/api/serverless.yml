@@ -43,6 +43,8 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_USERS_TABLE}'
+  environment:
+    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 custom:
   webpack:
@@ -58,8 +60,6 @@ custom:
   prune:
     automatic: true
     number: 5 # Number of versions to keep
-  environment:
-    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
