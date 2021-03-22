@@ -24,15 +24,11 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   stage: ${opt:stage,'dev'}
   environment:
     DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
   iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - 'lambda:InvokeFunction'
-      Resource: '*'
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -94,36 +90,42 @@ functions:
       - http:
           path: user/{userId}
           method: get
+          cors: true
   addActivity:
     handler: src/add-activity.default
     events:
       - http:
           path: user/{userId}/activities
           method: post
+          cors: true
   updateActivity:
     handler: src/update-activity.default
     events:
       - http:
           path: user/{userId}/activities/{activityKey}/edit
           method: put
+          cors: true
   addActivityHistory:
     handler: src/add-activity-history.default
     events:
       - http:
           path: user/{userId}/activities/{activityKey}
           method: post
+          cors: true
   getActivities:
     handler: src/get-activities.default
     events:
       - http:
           path: user/{userId}/activities
           method: get
+          cors: true
   getActivityHistory:
     handler: src/get-activity-history.default
     events:
       - http:
           path: user/{userId}/activities/history
           method: get
+          cors: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
