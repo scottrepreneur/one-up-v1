@@ -96,7 +96,7 @@ export const getLastActivity = (
   activityHistory: ActivityHistoryRecord[],
 ) => {
   const test = activityHistory.sort((a, b) => (
-    isAfter(parseISO(b.timestamp), parseISO(a.timestamp)) ? -1 : 1
+    isAfter(parseISO(b.timestamp), parseISO(a.timestamp)) ? 1 : -1
   ));
   const last: any = test[0];
   const lastActivity = activities.find((activity) => activity.activity === last.activity);
