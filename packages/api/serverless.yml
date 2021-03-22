@@ -42,7 +42,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_USERS_TABLE}'
+        - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/one-up-api-users-dev'
 
 custom:
   webpack:
