@@ -60,6 +60,8 @@ custom:
   prune:
     automatic: true
     number: 5 # Number of versions to keep
+  environment:
+    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
