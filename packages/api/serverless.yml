@@ -25,9 +25,9 @@ package:
 provider:
   name: aws
   runtime: nodejs10.x
-  # you can overwrite defaults here
-  #  stage: dev
-  #  region: us-east-1
+  stage: ${opt:stage,'dev'}
+  environment:
+    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -43,8 +43,6 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_USERS_TABLE}'
-  environment:
-    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 custom:
   webpack:
@@ -60,8 +58,6 @@ custom:
   prune:
     automatic: true
     number: 5 # Number of versions to keep
-  environment:
-    DYNAMODB_USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -92,37 +88,37 @@ custom:
 #    - exclude-me-dir/**
 
 functions:
-  get-user:
+  getUser:
     handler: src/get-user.default
     events:
       - http:
           path: user/{userId}
           method: get
-  add-activity:
+  addActivity:
     handler: src/add-activity.default
     events:
       - http:
           path: user/{userId}/activities
           method: post
-  update-activity:
+  updateActivity:
     handler: src/update-activity.default
     events:
       - http:
           path: user/{userId}/activities/{activityKey}/edit
           method: put
-  add-activity-history:
+  addActivityHistory:
     handler: src/add-activity-history.default
     events:
       - http:
           path: user/{userId}/activities/{activityKey}
           method: post
-  get-activities:
+  getActivities:
     handler: src/get-activities.default
     events:
       - http:
           path: user/{userId}/activities
           method: get
-  get-activity-history:
+  getActivityHistory:
     handler: src/get-activity-history.default
     events:
       - http:
@@ -157,8 +153,8 @@ functions:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-resources:
-  - ${file(resources/${opt:stage, self:provider.stage}-dynamodb.yml)}
+# resources:
+#   - ${file(resources/${opt:stage, self:provider.stage}-dynamodb.yml)}
 
 plugins:
   - serverless-webpack
