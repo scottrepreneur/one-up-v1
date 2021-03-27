@@ -12,6 +12,7 @@ const updateActivity: Function = async (event: APIGatewayEvent) => {
   // @ts-ignore
   const { userId, activityKey } = event.pathParameters;
   const activityData: ActivityRecord = JSON.parse(event.body || '{}');
+  activityData.points = parseFloat(activityData.points);
 
   if (userId && activityKey && activityData) {
     const user = await getOrCreateUser(userId.toLowerCase());
@@ -23,10 +24,9 @@ const updateActivity: Function = async (event: APIGatewayEvent) => {
       ...filteredActivities,
       activityData,
     ];
-    console.log(updatedActivities);
     try {
-      const result = await updateActivities(userId.toLowerCase(), updatedActivities);
-      console.log(result);
+      await updateActivities(userId.toLowerCase(), updatedActivities);
+      // console.log(result);
 
       return corsSuccessResponse({
         activities: updatedActivities,

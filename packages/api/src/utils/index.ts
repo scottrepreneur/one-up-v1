@@ -1,4 +1,4 @@
-import { parseISO, isAfter, sub} from 'date-fns';
+import { parseISO, isAfter, sub } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 
 import { DAY_START, TIMEZONE } from '../constants';

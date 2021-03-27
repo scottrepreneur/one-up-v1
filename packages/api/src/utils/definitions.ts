@@ -4,7 +4,7 @@ export interface ActivityRecord {
   type: string;
   category: string;
   icon: string;
-  points: number;
+  points: any;
   cooldown: number;
   frequency: number;
   frequencyPeriod: string;

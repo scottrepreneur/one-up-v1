@@ -101,11 +101,9 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
     }
   };
 
-  const onCancel = () => {
-    activity
-      ? history.push(`/activity/${activity}`)
-      : history.push('/activity/list');
-  };
+  const onCancel = () => (activity
+    ? history.push(`/activity/${activity}`)
+    : history.push('/activity/list'));
 
   return (
     <Box as='form' onSubmit={handleSubmit(onSubmit)} w='80%' m='0 auto'>
