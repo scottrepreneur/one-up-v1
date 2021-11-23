@@ -1,14 +1,18 @@
 import AWS from 'aws-sdk';
-import { ActivityRecord, StringifiedUserRecord, ActivityHistoryRecord } from './definitions';
+import {
+  ActivityRecord,
+  StringifiedUserRecord,
+  ActivityHistoryRecord,
+} from '@one-up/common';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const getUser = async (
-  user: string,
+  user: string
 ): Promise<{
-  Items: any[],
-  Count: number,
-  ScannedCount: number
+  Items: any[];
+  Count: number;
+  ScannedCount: number;
 }> => {
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
@@ -30,16 +34,17 @@ const getUser = async (
   });
 };
 
-const addRecord = (params: any) => new Promise((res, rej) => {
-  dynamoDb.put(params, (err: any, data: any) => {
-    if (err) {
-      console.log('Error', err);
-      rej(err);
-    } else {
-      res(data);
-    }
+const addRecord = (params: any) =>
+  new Promise((res, rej) => {
+    dynamoDb.put(params, (err: any, data: any) => {
+      if (err) {
+        console.log('Error', err);
+        rej(err);
+      } else {
+        res(data);
+      }
+    });
   });
-});
 
 export const getOrCreateUser = async (user: string) => {
   const timestamp = new Date().toISOString();
@@ -76,25 +81,26 @@ export const getOrCreateUser = async (user: string) => {
     console.log('User created', newRecord);
     return newUserRecord;
   } catch (err) {
-    console.log('User couldn\'t be created');
+    console.log("User couldn't be created");
     return err;
   }
 };
 
-export const updateUser = (params: any) => new Promise((res, rej) => {
-  dynamoDb.update(params, (err: any, data: any) => {
-    if (err) {
-      console.log('Error', err);
-      rej(err);
-    } else {
-      res(data);
-    }
+export const updateUser = (params: any) =>
+  new Promise((res, rej) => {
+    dynamoDb.update(params, (err: any, data: any) => {
+      if (err) {
+        console.log('Error', err);
+        rej(err);
+      } else {
+        res(data);
+      }
+    });
   });
-});
 
 export const addActivityToDb = async (
   account: string,
-  activityList: ActivityRecord[],
+  activityList: ActivityRecord[]
 ) => {
   const timestamp = new Date().toISOString();
   const params: any = {
@@ -126,7 +132,7 @@ export const addActivityToDb = async (
 
 export const addActivityHistoryToDb = async (
   account: string,
-  userActivityHistory: ActivityHistoryRecord[],
+  userActivityHistory: ActivityHistoryRecord[]
 ) => {
   const timestamp = new Date().toISOString();
   const params: any = {
@@ -142,7 +148,8 @@ export const addActivityHistoryToDb = async (
       ':activitiesTimeline': JSON.stringify(userActivityHistory),
       ':updated': timestamp,
     },
-    UpdateExpression: 'SET #activitiesTimeline = :activitiesTimeline, #updated = :updated',
+    UpdateExpression:
+      'SET #activitiesTimeline = :activitiesTimeline, #updated = :updated',
     ReturnValues: 'ALL_NEW',
   };
 
@@ -157,7 +164,7 @@ export const addActivityHistoryToDb = async (
 
 export const updateActivities = async (
   account: string,
-  activities: ActivityRecord[],
+  activities: ActivityRecord[]
 ) => {
   const timestamp = new Date().toISOString();
   const params: any = {

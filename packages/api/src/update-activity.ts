@@ -1,14 +1,16 @@
 import { APIGatewayEvent } from 'aws-lambda';
+import { ActivityRecord } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
   runWarm,
-  ActivityRecord,
   getOrCreateUser,
   updateActivities,
 } from './utils';
 
-const updateActivity: Function = async (event: APIGatewayEvent): Promise<any> => {
+const updateActivity: Function = async (
+  event: APIGatewayEvent
+): Promise<any> => {
   // @ts-ignore
   const { userId, activityKey } = event.pathParameters;
   const activityData: ActivityRecord = JSON.parse(event.body || '{}');
@@ -18,12 +20,10 @@ const updateActivity: Function = async (event: APIGatewayEvent): Promise<any> =>
     const user = await getOrCreateUser(userId.toLowerCase());
     const activitiesList = JSON.parse(user.activities);
     // console.log(activitiesList);
-    const filteredActivities = activitiesList.filter((activity: any) => (
-      activity.activity !== activityData.activity));
-    const updatedActivities = [
-      ...filteredActivities,
-      activityData,
-    ];
+    const filteredActivities = activitiesList.filter(
+      (activity: any) => activity.activity !== activityData.activity
+    );
+    const updatedActivities = [...filteredActivities, activityData];
     try {
       await updateActivities(userId.toLowerCase(), updatedActivities);
       // console.log(result);

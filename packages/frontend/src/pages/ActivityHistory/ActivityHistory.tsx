@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Heading, Flex, Spinner } from '@chakra-ui/react';
 import { parseISO, formatDistanceToNow } from 'date-fns';
-
+import { ExtendedActivityHistoryRecord } from '@one-up/common';
 import { useUser } from '../../contexts/UserContext';
-import { ExtendedActivityHistoryRecord } from '../../utils';
 
 const ActivityHistory: React.FC = () => {
   const { activityHistory } = useUser();
@@ -14,7 +13,7 @@ const ActivityHistory: React.FC = () => {
     if (activityHistory) {
       const tempHistory = activityHistory?.sort(
         (a: ExtendedActivityHistoryRecord, b: ExtendedActivityHistoryRecord) =>
-          parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime()
+          parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime(),
       );
       setSortedHistory(tempHistory);
     }

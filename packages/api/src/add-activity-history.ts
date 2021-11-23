@@ -1,16 +1,12 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import {
-  sub,
-  parseISO,
-  isAfter,
-} from 'date-fns';
+import { sub, parseISO, isAfter } from 'date-fns';
+import { ActivityHistoryRecord } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
   addActivityHistoryToDb,
-  ActivityHistoryRecord,
 } from './utils';
 
 const addActivityHistory: Function = async (event: APIGatewayEvent) => {
@@ -27,21 +23,33 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
       const userActivities = JSON.parse(user.activities);
 
       // check the activity exists for the user
-      if (userActivities.filter((e: any) => e.activity === activityKey).length > 0) {
-        const { cooldown } = userActivities.filter((e: any) => e.activity === activityKey)[0];
+      if (
+        userActivities.filter((e: any) => e.activity === activityKey).length > 0
+      ) {
+        const { cooldown } = userActivities.filter(
+          (e: any) => e.activity === activityKey
+        )[0];
 
         // activity has been recorded in timeline before
-        if (userActivityHistory.filter((e: any) => e.activity === activityKey).length > 0) {
+        if (
+          userActivityHistory.filter((e: any) => e.activity === activityKey)
+            .length > 0
+        ) {
           const lastActivity: ActivityHistoryRecord = userActivityHistory
             .filter((e: any) => e.activity === activityKey)
-            .sort((a: any, b: any) => (
-              parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime()))[0];
+            .sort(
+              (a: any, b: any) =>
+                parseISO(b.timestamp).getTime() -
+                parseISO(a.timestamp).getTime()
+            )[0];
 
           // check cooldown has passed since last activity recorded
-          if (isAfter(
-            sub(parseISO(timestamp), { minutes: cooldown }),
-            parseISO(lastActivity.timestamp),
-          )) {
+          if (
+            isAfter(
+              sub(parseISO(timestamp), { minutes: cooldown }),
+              parseISO(lastActivity.timestamp)
+            )
+          ) {
             userActivityHistory.push({
               activity: activityKey,
               timestamp,
@@ -57,8 +65,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
           } else {
             // TODO update activity cool down time
             return corsErrorResponse({
-              error:
-              `Cool down for ${activityKey} has not expired. Try again in [TODO]`,
+              error: `Cool down for ${activityKey} has not expired. Try again in [TODO]`,
             });
           }
         } else {
@@ -68,7 +75,10 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
           });
 
           try {
-            const result = await addActivityHistoryToDb(account, userActivityHistory);
+            const result = await addActivityHistoryToDb(
+              account,
+              userActivityHistory
+            );
             return corsSuccessResponse({ success: result });
           } catch (err) {
             return corsErrorResponse({ error: err });
@@ -76,7 +86,9 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
         }
       }
 
-      return corsErrorResponse({ error: `No activity found with key: ${activityKey}` });
+      return corsErrorResponse({
+        error: `No activity found with key: ${activityKey}`,
+      });
     } catch (err) {
       console.log(err);
       return corsErrorResponse({ error: err });

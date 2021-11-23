@@ -1,23 +1,14 @@
-import {
-  parseISO,
-  isAfter,
-  sub,
-  isBefore,
-} from 'date-fns';
+import { parseISO, isAfter, sub, isBefore } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 
-import { DAY_START, TIMEZONE } from '../constants';
+import { DAY_START, TIMEZONE } from './constants';
 import {
   ActivityRecord,
   ActivityHistoryRecord,
   GoalRecord,
 } from './definitions';
 
-const isDuringDay = (
-  value: any,
-  timeStart: any,
-  timeEnd: any,
-) => {
+const isDuringDay = (value: any, timeStart: any, timeEnd: any) => {
   // console.log(value);
   return isAfter(value, timeStart) && isBefore(value, timeEnd);
 };
@@ -40,12 +31,26 @@ export const getStreak = (
   let timestamp: any = null;
   if (today.getHours() < 7) {
     timestamp = zonedTimeToUtc(
-      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1, DAY_START, 0, 0),
+      new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() - 1,
+        DAY_START,
+        0,
+        0,
+      ),
       TIMEZONE,
     );
   } else {
     timestamp = zonedTimeToUtc(
-      new Date(today.getFullYear(), today.getMonth(), today.getDate(), DAY_START, 0, 0),
+      new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        DAY_START,
+        0,
+        0,
+      ),
       TIMEZONE,
     );
   }
@@ -61,15 +66,15 @@ export const getStreak = (
       });
     } else {
       const timestampStart = sub(timestamp, { days: streak + 1 });
-      const timestampEnd = streak > 1 ? sub(timestamp, { days: streak }) : timestamp;
-      activitiesForDay = activityHistory
-        .filter((e) => isDuringDay(parseISO(e.timestamp), timestampStart, timestampEnd));
+      const timestampEnd =
+        streak > 1 ? sub(timestamp, { days: streak }) : timestamp;
+      activitiesForDay = activityHistory.filter((e) =>
+        isDuringDay(parseISO(e.timestamp), timestampStart, timestampEnd),
+      );
     }
 
     const pointsForDay = activitiesForDay.map((e) => {
-      const {
-        points,
-      } = activities.filter((a) => a.activity === e.activity)[0];
+      const { points } = activities.filter((a) => a.activity === e.activity)[0];
 
       return points;
     });
@@ -85,6 +90,4 @@ export const getStreak = (
   return streak;
 };
 
-export const getGoal = () => {
-
-};
+export const getGoal = () => {};

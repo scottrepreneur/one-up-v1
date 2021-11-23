@@ -7,6 +7,7 @@
     "@chakra-ui/react": "^1.1.6",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
+    "@one-up/common": "*",
     "@types/react-router-dom": "^5.1.6",
     "@types/styled-components": "^5.1.4",
     "axios": "^0.20.0",

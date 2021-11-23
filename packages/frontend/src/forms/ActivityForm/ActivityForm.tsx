@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Input, Button, Flex, Stack, HStack } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-
 import { useHistory } from 'react-router';
+import { ActivityRecord } from '@one-up/common';
+
 import { useOverlay } from '../../contexts/OverlayContext';
-import { ActivityRecord } from '../../utils';
 
 interface ActivityFormProps {
   activity?: any;

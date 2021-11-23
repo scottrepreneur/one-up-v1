@@ -28,7 +28,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
   const getActivityHistory = async (): Promise<any> => {
     try {
       const result = await axios.get(
-        `${API_URL}/user/${ADDRESS}/activities/history`
+        `${API_URL}/user/${ADDRESS}/activities/history`,
       );
       setActivityHistory(result.data);
     } catch (err) {
@@ -67,7 +67,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
   const recordActivity = async (activity: any): Promise<any> => {
     try {
       const result = await axios.post(
-        `${API_URL}/user/${ADDRESS}/activities/${activity}`
+        `${API_URL}/user/${ADDRESS}/activities/${activity}`,
       );
       console.log(result);
       // TODO return history here instead
@@ -83,7 +83,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     try {
       const result = await axios.post(
         `${API_URL}/user/${ADDRESS}/activities`,
-        activity
+        activity,
       );
       setActivities(result.data.activities);
       return activity;
@@ -97,7 +97,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     try {
       const result = await axios.put(
         `${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`,
-        activity
+        activity,
       );
       setActivities(result.data.activities);
       const updatedActivity =

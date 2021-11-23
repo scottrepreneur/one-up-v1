@@ -27,5 +27,5 @@ ReactDOM.render(
       <App />
     </ContextProviders>
   </ChakraProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

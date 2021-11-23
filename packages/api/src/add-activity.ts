@@ -1,11 +1,11 @@
 import { APIGatewayEvent } from 'aws-lambda';
+import { ActivityRecord } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
   addActivityToDb,
-  ActivityRecord,
 } from './utils';
 
 const addActivity: Function = async (event: APIGatewayEvent) => {
@@ -18,7 +18,10 @@ const addActivity: Function = async (event: APIGatewayEvent) => {
     const user = await getOrCreateUser(account);
     if (user) {
       userActivities = JSON.parse(user.activities);
-      if (userActivities.filter((e) => e.activity === activity.activity).length === 0) {
+      if (
+        userActivities.filter((e) => e.activity === activity.activity)
+          .length === 0
+      ) {
         const newActivity: ActivityRecord = {
           activity: activity.activity,
           name: activity.name || 'Default activity',
@@ -34,7 +37,9 @@ const addActivity: Function = async (event: APIGatewayEvent) => {
         };
         userActivities.push(newActivity);
       } else {
-        return corsErrorResponse({ error: `activity with key '${activity.activity}' already exists` });
+        return corsErrorResponse({
+          error: `activity with key '${activity.activity}' already exists`,
+        });
       }
     }
 

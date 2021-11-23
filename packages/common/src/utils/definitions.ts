@@ -26,9 +26,9 @@ export interface UserRecord {
   userId: string;
   currentGoal: number;
   goalHistory: Array<string>;
-  activities: Array<ActivityRecord>,
-  activitiesTimeline: Array<ActivityHistoryRecord>,
-  email: string,
+  activities: Array<ActivityRecord>;
+  activitiesTimeline: Array<ActivityHistoryRecord>;
+  email: string;
   emailPreferences: {
     marketing: boolean;
     notifications: boolean;
@@ -42,11 +42,18 @@ export interface StringifiedUserRecord {
   userId: string;
   currentGoal: number;
   goalHistory: string;
-  activities: string,
-  activitiesTimeline: string,
-  email: string,
+  activities: string;
+  activitiesTimeline: string;
+  email: string;
   emailPreferences: string;
   timestamp: string;
   updated: string;
   timezone: string;
+}
+
+export interface ExtendedActivityHistoryRecord {
+  activity: string;
+  timestamp: string;
+  name: string;
+  points: number;
 }

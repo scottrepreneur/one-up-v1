@@ -1,9 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { Box, Heading, Flex, useTheme, Spinner } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
-
+import { ActivityRecord } from '@one-up/common';
 import { useUser } from '../../contexts/UserContext';
-import { ActivityRecord } from '../../utils';
 
 const ActivityList: FunctionComponent = () => {
   const { loading, activities } = useUser();
