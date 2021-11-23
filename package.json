@@ -1,12 +1,6 @@
 {
   "name": "one-up",
   "version": "1.1.0",
-  "keywords": [
-    "ethereum",
-    "react",
-    "workspaces",
-    "yarn"
-  ],
   "private": true,
   "scripts": {
     "api:deploy": "yarn workspace api deploy",
@@ -20,44 +14,12 @@
     "web:start": "yarn workspace frontend start",
     "web:test": "yarn workspace frontend test",
     "web:lint": "yarn workspace frontend lint",
-    "web:add": "yarn workspace frontend add",
-    "lint": "eslint --ignore-path .gitignore \"./packages/**/*.{ts,tsx,js,jsx}\" --fix",
-    "format": "prettier --ignore-path .gitignore --write \"{*,**/*}.{ts,tsx,js,jsx,json,yml,yaml,md}\""
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "web:add": "yarn workspace frontend add"
   },
   "workspaces": {
     "packages": [
       "packages/*"
     ]
   },
-  "devDependencies": {
-    "eslint": "6.8.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-config-prettier": "6.11.0",
-    "eslint-plugin-import": "2.22.0",
-    "eslint-plugin-react": "7.20.3",
-    "eslint-plugin-react-hooks": "4.0.6",
-    "eslint-plugin-simple-import-sort": "5.0.3",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.13",
-    "prettier": "^2.0.5"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "semi": true,
-    "jsxSingleQuote": true,
-    "arrowParens": "always",
-    "tabWidth": 2,
-    "useTabs": false
-  },
-  "license": "UNLICENSED",
-  "lint-staged": {
-    "*.{js,jsx}": "eslint --fix",
-    "*.{ts,tsx,js,jsx,json,yml,yaml,md}": "prettier --write"
-  }
+  "license": "UNLICENSED"
 }

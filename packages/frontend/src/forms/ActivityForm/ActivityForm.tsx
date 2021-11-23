@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box, Input, Button, Flex, Stack, HStack,
-} from '@chakra-ui/react';
+import { Box, Input, Button, Flex, Stack, HStack } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
 import { useHistory } from 'react-router';
@@ -16,13 +14,16 @@ interface ActivityFormProps {
 }
 
 const ActivityForm: React.FC<ActivityFormProps> = ({
-  activity, activities, updateActivity, createActivity,
+  activity,
+  activities,
+  updateActivity,
+  createActivity,
 }: ActivityFormProps) => {
   const { register, handleSubmit, errors } = useForm();
   const { successToast, errorToast } = useOverlay();
   const history = useHistory();
   const usedKeys = activities?.map((a: ActivityRecord) => a.activity);
-  const [activityData, setActivityData] = useState({});
+  const [activityData, setActivityData] = useState<{ [key: string]: string }>();
   // console.log(activities);
   useEffect(() => {
     if (activity && activities) {
@@ -41,8 +42,8 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
         key: 'activity',
         placeholder: 'dog-walk',
         hint: 'lowercase, no spaces or special characters. hyphen only.',
-        validation: (value: any): boolean => (
-          activity ? usedKeys.includes(value) : !usedKeys.includes(value)),
+        validation: (value: any): boolean =>
+          activity ? usedKeys.includes(value) : !usedKeys.includes(value),
       },
     ],
     [
@@ -101,9 +102,10 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
     }
   };
 
-  const onCancel = () => (activity
-    ? history.push(`/activity/${activity}`)
-    : history.push('/activity/list'));
+  const onCancel = () =>
+    activity
+      ? history.push(`/activity/${activity}`)
+      : history.push('/activity/list');
 
   return (
     <Box as='form' onSubmit={handleSubmit(onSubmit)} w='80%' m='0 auto'>
@@ -111,8 +113,10 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
         {activityFields.map((row) => (
           <Flex w='100%' justify='space-between' key={row[0].label}>
             {row.map((field: ActivityFieldProps) => {
-              // @ts-ignore
-              const defaultValue: string = activityData && field.key in activityData ? activityData[field.key] : '';
+              const defaultValue: string =
+                activityData && field.key in activityData
+                  ? activityData[field.key]
+                  : '';
               return (
                 <Stack key={field.key} spacing={2} w='40%'>
                   <Box color='white'>{field.label}</Box>
@@ -120,9 +124,15 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
                     name={field.key}
                     placeholder={field.placeholder}
                     defaultValue={defaultValue}
-                    ref={field.validation ? register({ validate: field.validation }) : register}
+                    ref={
+                      field.validation
+                        ? register({ validate: field.validation })
+                        : register
+                    }
                   />
-                  <Box color='white' fontSize='xs'>{field.hint}</Box>
+                  <Box color='white' fontSize='xs'>
+                    {field.hint}
+                  </Box>
                 </Stack>
               );
             })}
@@ -133,8 +143,12 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
 
       <Flex justify='flex-end' my={6}>
         <HStack spacing={6}>
-          <Button variant='outline' onClick={onCancel}>Cancel</Button>
-          <Button variant='primary' type='submit'>{activity ? 'Update' : 'Create'}</Button>
+          <Button variant='outline' onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button variant='primary' type='submit'>
+            {activity ? 'Update' : 'Create'}
+          </Button>
         </HStack>
       </Flex>
     </Box>

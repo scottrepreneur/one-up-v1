@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import {
-  Box, Heading, Flex, Spinner, Stack, HStack,
-} from '@chakra-ui/react';
+import { Box, Heading, Flex, Spinner, Stack, HStack } from '@chakra-ui/react';
 import { useUser } from '../../contexts/UserContext';
 
 const Dashboard: FunctionComponent = () => {
@@ -10,7 +8,9 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <Box w='70%' m='0 auto'>
-      <Heading size='xl' textAlign='center' color='white'>Dashboard</Heading>
+      <Heading size='xl' textAlign='center' color='white'>
+        Dashboard
+      </Heading>
       {userData ? (
         <Stack spacing={6}>
           <Flex justify='space-between' my={100}>

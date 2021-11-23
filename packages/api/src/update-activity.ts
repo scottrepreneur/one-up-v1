@@ -8,7 +8,7 @@ import {
   updateActivities,
 } from './utils';
 
-const updateActivity: Function = async (event: APIGatewayEvent) => {
+const updateActivity: Function = async (event: APIGatewayEvent): Promise<any> => {
   // @ts-ignore
   const { userId, activityKey } = event.pathParameters;
   const activityData: ActivityRecord = JSON.parse(event.body || '{}');
@@ -33,9 +33,10 @@ const updateActivity: Function = async (event: APIGatewayEvent) => {
       });
     } catch (err) {
       console.log(err);
-      corsErrorResponse({ error: err });
+      return corsErrorResponse({ error: err });
     }
   }
+  return corsErrorResponse({ error: 'No id or key found' });
 };
 
 export default runWarm(updateActivity);

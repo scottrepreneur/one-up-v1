@@ -1,35 +1,42 @@
-// @ts-nocheck
 import React, {
-  createContext, useContext, useState, useEffect,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
 } from 'react';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const ADDRESS = process.env.REACT_APP_ACCOUNT;
 
-export const UserContext = createContext(null);
+export const UserContext: any = createContext(null);
 
 interface UserContextProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const UserContextProvider: React.FC<UserContextProps> = ({ children }: UserContextProps) => {
+export const UserContextProvider: React.FC<UserContextProps> = ({
+  children,
+}: UserContextProps) => {
   // const { address } = useInjectedProvider();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [activityHistory, setActivityHistory] = useState([]);
   const [activities, setActivities] = useState([]);
 
-  const getActivityHistory = async () => {
+  const getActivityHistory = async (): Promise<any> => {
     try {
-      const result = await axios.get(`${API_URL}/user/${ADDRESS}/activities/history`);
+      const result = await axios.get(
+        `${API_URL}/user/${ADDRESS}/activities/history`
+      );
       setActivityHistory(result.data);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const getActivities = async () => {
+  const getActivities = async (): Promise<any> => {
     try {
       const result = await axios.get(`${API_URL}/user/${ADDRESS}/activities`);
       setActivities(result.data);
@@ -38,7 +45,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
     }
   };
 
-  const getUser = async () => {
+  const getUser = async (): Promise<any> => {
     try {
       const result = await axios.get(`${API_URL}/user/${ADDRESS}`);
       setUserData(result.data);
@@ -48,7 +55,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
   };
 
   useEffect(() => {
-    const getData = async () => {
+    const getData = async (): Promise<any> => {
       await getUser();
       await getActivityHistory();
       await getActivities();
@@ -57,9 +64,11 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
     getData();
   }, []);
 
-  const recordActivity = async (activity) => {
+  const recordActivity = async (activity: any): Promise<any> => {
     try {
-      const result = await axios.post(`${API_URL}/user/${ADDRESS}/activities/${activity}`);
+      const result = await axios.post(
+        `${API_URL}/user/${ADDRESS}/activities/${activity}`
+      );
       console.log(result);
       // TODO return history here instead
       getActivityHistory();
@@ -70,9 +79,12 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
     }
   };
 
-  const createActivity = async (activity) => {
+  const createActivity = async (activity: any): Promise<any> => {
     try {
-      const result = await axios.post(`${API_URL}/user/${ADDRESS}/activities`, activity);
+      const result = await axios.post(
+        `${API_URL}/user/${ADDRESS}/activities`,
+        activity
+      );
       setActivities(result.data.activities);
       return activity;
     } catch (err) {
@@ -81,11 +93,15 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
     }
   };
 
-  const updateActivity = async (activity) => {
+  const updateActivity = async (activity: any): Promise<any> => {
     try {
-      const result = await axios.put(`${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`, activity);
+      const result = await axios.put(
+        `${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`,
+        activity
+      );
       setActivities(result.data.activities);
-      const updatedActivity = result.data.activities[result.data.activities.length - 1];
+      const updatedActivity =
+        result.data.activities[result.data.activities.length - 1];
       return updatedActivity;
     } catch (err) {
       console.log(err);
@@ -110,7 +126,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({ children }: Us
   );
 };
 
-export const useUser = () => {
+export const useUser = (): any => {
   const {
     userData,
     activityHistory,

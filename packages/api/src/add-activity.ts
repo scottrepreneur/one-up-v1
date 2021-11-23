@@ -11,9 +11,7 @@ import {
 const addActivity: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
   const activity: ActivityRecord = JSON.parse(event.body || '{}');
-  // @ts-ignore
-  const account = event.pathParameters.userId.toLowerCase();
-  // @ts-ignore
+  const account = event.pathParameters?.userId?.toLowerCase();
   let userActivities: ActivityRecord[] = [];
 
   if (account) {

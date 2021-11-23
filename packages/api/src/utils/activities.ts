@@ -83,7 +83,10 @@ export const getActivitiesText = (
   let activitiesTextString = '';
 
   timeSinceActivities.forEach((item: ActivityHistoryRecord) => {
-    const { points, name } = activities.find((a) => a.activity === item.activity);
+    const activity = activities.find((a) => a.activity === item.activity);
+    if (!activity) return activitiesTextString;
+
+    const { points, name } = activity;
 
     activitiesTextString = `${name} | ${points} points | ${formatDistanceToNow(parseISO(item.timestamp))} ago\n`.concat(activitiesTextString);
   });

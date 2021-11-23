@@ -4,4 +4,6 @@ export const getPointsToday = (history: any) => {
   // return history.filter(activity => activity.)
 };
 
-export const getPointsThisWeek = (history: any) => { console.log(history); };
+export const getPointsThisWeek = (history: any) => {
+  console.log(history);
+};

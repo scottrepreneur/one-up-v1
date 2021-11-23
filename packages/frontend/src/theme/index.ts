@@ -25,7 +25,7 @@ export const customTheme = {
   },
 };
 
-export const theme = extendTheme({
+export const theme: any = extendTheme({
   colors: {
     // ...theme.colors,
     brand: {

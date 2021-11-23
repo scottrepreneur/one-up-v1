@@ -7,8 +7,7 @@ import {
 } from './utils';
 
 const getUser: Function = async (event: APIGatewayEvent) => {
-  // @ts-ignore
-  const account = event.pathParameters.userId.toLowerCase();
+  const account = event.pathParameters?.userId?.toLowerCase();
 
   if (account) {
     const user = await getOrCreateUser(account);

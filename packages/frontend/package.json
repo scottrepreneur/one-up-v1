@@ -7,23 +7,18 @@
     "@chakra-ui/react": "^1.1.6",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "@types/react-router-dom": "^5.1.6",
     "@types/styled-components": "^5.1.4",
     "axios": "^0.20.0",
     "date-fns": "^2.19.0",
     "emotion-theming": "^10.0.27",
     "framer-motion": "^3.10.0",
-    "install": "^0.13.0",
-    "npm": "^6.14.8",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-hook-form": "^6.9.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,14 +28,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "useTabs": false,
-    "jsxSingleQuote": true,
-    "singleQuote": true,
-    "semi": true,
-    "trailingComma": "es5"
   },
   "browserslist": {
     "production": [
@@ -53,5 +40,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.0.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "2.1.0"
   }
 }

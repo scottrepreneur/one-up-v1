@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import {
-  Box, Heading, Flex, useTheme, Spinner,
-} from '@chakra-ui/react';
+import { Box, Heading, Flex, useTheme, Spinner } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 
 import { useUser } from '../../contexts/UserContext';
@@ -22,7 +20,15 @@ const ActivityList: FunctionComponent = () => {
       <Box pt={20} w='100%'>
         {activities && activities.length ? (
           activities.map((activity: ActivityRecord) => (
-            <Flex key={activity.activity} _hover={{ cursor: 'pointer', backgroundColor: theme.colors.blue[500] }} py={3} onClick={() => handleClick(activity.activity)}>
+            <Flex
+              key={activity.activity}
+              _hover={{
+                cursor: 'pointer',
+                backgroundColor: theme.colors.blue[500],
+              }}
+              py={3}
+              onClick={() => handleClick(activity.activity)}
+            >
               <Flex w='50%' direction='column' align='center' color='white'>
                 {activity.name}
               </Flex>
@@ -31,16 +37,14 @@ const ActivityList: FunctionComponent = () => {
               </Flex>
             </Flex>
           ))
+        ) : activities.length === 0 && !loading ? (
+          <Flex justify='center' color='white'>
+            No Activities Found. Create One!
+          </Flex>
         ) : (
-          activities.length === 0 && !loading ? (
-            <Flex justify='center' color='white'>
-              No Activities Found. Create One!
-            </Flex>
-          ) : (
-            <Flex w='100%' h='250px' align='center' justify='center'>
-              <Spinner size='xl' />
-            </Flex>
-          )
+          <Flex w='100%' h='250px' align='center' justify='center'>
+            <Spinner size='xl' />
+          </Flex>
         )}
       </Box>
     </Flex>

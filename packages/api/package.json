@@ -9,7 +9,7 @@
     "deploy:production": "export NODE_ENV=production && yarn deploy:env",
     "deploy:stage": "export NODE_ENV=stage && yarn deploy:env",
     "lint": "eslint src --ext ts,js --no-ignore --fix",
-    "serve": "sls offline -P 4000",
+    "serve": "sls offline",
     "serve:watch": "nodemon -e js,ts,jsx,tsx -x yarn serve",
     "tail:user": "sls logs --stage dev --function getUser --tail",
     "logs:user": "sls logs --stage dev --function getUser",
@@ -27,14 +27,15 @@
     "@typescript-eslint/eslint-plugin": "^3.0.0",
     "@typescript-eslint/parser": "^4.5.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^26.6.0",
     "babel-loader": "^8.0.6",
-    "eslint": "^6.3.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.3.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "2.1.0",
     "husky": "^4.0.2",
@@ -67,13 +68,6 @@
     "hooks": {
       "pre-commit": "lint-staged && yarn test"
     }
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "tabWidth": 2,
-    "semi": true,
-    "useTabs": false
   },
   "lint-staged": {
     "src/**/*.{js,ts}": [

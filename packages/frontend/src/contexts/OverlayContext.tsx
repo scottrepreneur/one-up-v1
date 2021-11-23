@@ -1,9 +1,20 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { useToast } from '@chakra-ui/react';
 
-export const OverlayContext = createContext(null);
+export const OverlayContext: any = createContext(null);
 
-export const OverlayContextProvider = ({ children }) => {
+interface OverlayContextProps {
+  children: ReactNode;
+}
+
+interface ToastProps {
+  title: string;
+  description: string;
+}
+
+export const OverlayContextProvider: React.FC<OverlayContextProps> = ({
+  children,
+}: OverlayContextProps) => {
   const toast = useToast();
   const [modals, setModals] = useState({
     questSuccess: false,
@@ -11,7 +22,7 @@ export const OverlayContextProvider = ({ children }) => {
     nonFungibleReward: false,
   });
 
-  const errorToast = (content) => {
+  const errorToast = (content: ToastProps): any => {
     toast({
       title: content.title,
       description: content.description,
@@ -21,7 +32,7 @@ export const OverlayContextProvider = ({ children }) => {
       isClosable: true,
     });
   };
-  const successToast = (content) => {
+  const successToast = (content: ToastProps): any => {
     toast({
       title: content.title,
       description: content.description,
@@ -31,7 +42,7 @@ export const OverlayContextProvider = ({ children }) => {
       isClosable: true,
     });
   };
-  const warningToast = (content) => {
+  const warningToast = (content: ToastProps): any => {
     toast({
       title: content.title,
       description: content.description,
@@ -59,14 +70,9 @@ export const OverlayContextProvider = ({ children }) => {
 
 export default OverlayContextProvider;
 
-export const useOverlay = () => {
-  const {
-    modals,
-    setModals,
-    errorToast,
-    warningToast,
-    successToast,
-  } = useContext(OverlayContext);
+export const useOverlay = (): any => {
+  const { modals, setModals, errorToast, warningToast, successToast } =
+    useContext(OverlayContext);
   return {
     modals,
     setModals,

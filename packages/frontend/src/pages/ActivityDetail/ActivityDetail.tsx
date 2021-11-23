@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
-  Box, Flex, Heading, Button, Stack, Spinner, HStack,
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Stack,
+  Spinner,
+  HStack,
 } from '@chakra-ui/react';
 import { useUser } from '../../contexts/UserContext';
 import { useOverlay } from '../../contexts/OverlayContext';
 
 const ActivityDetail: React.FC = () => {
-  const { activity } = useParams();
+  const { activity } = useParams<{ activity: any }>();
   const history = useHistory();
   const { activities, recordActivity } = useUser();
   const { successToast, errorToast } = useOverlay();
@@ -15,16 +21,30 @@ const ActivityDetail: React.FC = () => {
 
   useEffect(() => {
     if (activities) {
-      setActivityData(activities.filter((a: any) => a.activity === activity)[0]);
+      setActivityData(
+        activities.filter((a: any) => a.activity === activity)[0]
+      );
     }
   }, [activities, activity]);
   console.log(activityData);
 
   const detailFields = [
-    [{ label: 'Name', param: 'name' }, { label: 'ID', param: 'activity' }],
-    [{ label: 'Type', param: 'type' }, { label: 'Category', param: 'category' }],
-    [{ label: 'Frequency', param: 'frequency' }, { label: 'Frequency Period', param: 'frequencyPeriod' }],
-    [{ label: 'Cooldown', param: 'cooldown' }, { label: 'Points', param: 'points' }],
+    [
+      { label: 'Name', param: 'name' },
+      { label: 'ID', param: 'activity' },
+    ],
+    [
+      { label: 'Type', param: 'type' },
+      { label: 'Category', param: 'category' },
+    ],
+    [
+      { label: 'Frequency', param: 'frequency' },
+      { label: 'Frequency Period', param: 'frequencyPeriod' },
+    ],
+    [
+      { label: 'Cooldown', param: 'cooldown' },
+      { label: 'Points', param: 'points' },
+    ],
   ];
 
   const editActivity = () => {
@@ -47,7 +67,9 @@ const ActivityDetail: React.FC = () => {
 
   return (
     <Flex align='center' direction='column' m='30px auto' w='40%'>
-      <Heading size='xl' mb={6}>Activity Detail</Heading>
+      <Heading size='xl' mb={6}>
+        Activity Detail
+      </Heading>
       {activityData ? (
         <>
           <Stack spacing={3} w='100%'>
@@ -64,8 +86,12 @@ const ActivityDetail: React.FC = () => {
           </Stack>
           <Flex w='100%' justify='flex-end'>
             <HStack spacing={4}>
-              <Button variant='outline' onClick={editActivity}>Edit</Button>
-              <Button variant='primary' onClick={submitRecordActivity}>Record Now</Button>
+              <Button variant='outline' onClick={editActivity}>
+                Edit
+              </Button>
+              <Button variant='primary' onClick={submitRecordActivity}>
+                Record Now
+              </Button>
             </HStack>
           </Flex>
         </>

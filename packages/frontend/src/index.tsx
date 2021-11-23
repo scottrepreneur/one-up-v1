@@ -11,33 +11,21 @@ import { OverlayContextProvider } from './contexts/OverlayContext';
 
 interface ContextProps {
   children: ReactNode;
-  // any other props that come into the component
 }
 
-function ContextProviders({ children }: ContextProps) {
-  return (
-    <OverlayContextProvider>
-      <UserContextProvider>
-        {children}
-      </UserContextProvider>
-    </OverlayContextProvider>
-  );
-}
-
-// function Updaters() {
-//   return (
-//     <>
-//       <ApplicationContextUpdater />
-//     </>
-//   );
-// }
+const ContextProviders: React.FC<ContextProps> = ({
+  children,
+}: ContextProps) => (
+  <OverlayContextProvider>
+    <UserContextProvider>{children}</UserContextProvider>
+  </OverlayContextProvider>
+);
 
 ReactDOM.render(
   <ChakraProvider theme={theme}>
     <ContextProviders>
-      {/* <Updaters /> */}
       <App />
     </ContextProviders>
   </ChakraProvider>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );

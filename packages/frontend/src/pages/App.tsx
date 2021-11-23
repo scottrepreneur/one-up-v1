@@ -1,8 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Flex } from '@chakra-ui/react';
-import {
-  HashRouter, Redirect, Route, Switch,
-} from 'react-router-dom';
+import { HashRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 import Nav from '../components/Nav';
 import Dashboard from './Dashboard';
@@ -13,8 +11,23 @@ import ActivityHistory from './ActivityHistory';
 import ActivityList from './ActivityList';
 
 const App: FunctionComponent = () => (
-  <Flex flexWrap='wrap' align='flex-start' minHeight='100vh' height='100%' width='100%' background='#212121'>
-    <Flex direction='column' w='100%' h='100%' justify='flex-start' align='flex-start' flex='1' overflow='auto'>
+  <Flex
+    flexWrap='wrap'
+    align='flex-start'
+    minHeight='100vh'
+    height='100%'
+    width='100%'
+    background='#212121'
+  >
+    <Flex
+      direction='column'
+      w='100%'
+      h='100%'
+      justify='flex-start'
+      align='flex-start'
+      flex='1'
+      overflow='auto'
+    >
       <HashRouter>
         <Nav />
         <Switch>
