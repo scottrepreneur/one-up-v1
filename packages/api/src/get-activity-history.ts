@@ -5,7 +5,7 @@ import {
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
-} from 'utils';
+} from './utils';
 
 const getActivityHistory: Function = async (event: APIGatewayEvent) => {
   const account = event.pathParameters?.userId?.toLowerCase();

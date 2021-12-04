@@ -6,7 +6,7 @@ import {
   runWarm,
   getOrCreateUser,
   updateActivities,
-} from 'utils';
+} from './utils';
 
 const updateActivity: Function = async (
   event: APIGatewayEvent,
