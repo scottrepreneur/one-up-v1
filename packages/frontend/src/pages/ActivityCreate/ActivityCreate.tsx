@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Heading } from '@chakra-ui/react';
-import ActivityForm from '../../forms/ActivityForm';
-import { useUser } from '../../contexts/UserContext';
+import ActivityForm from 'forms/ActivityForm';
+import { useUser } from 'contexts/UserContext';
 
 const ActivityCreate: React.FC = () => {
   const { activities, createActivity } = useUser();

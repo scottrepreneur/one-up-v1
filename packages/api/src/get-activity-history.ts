@@ -5,7 +5,7 @@ import {
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
-} from './utils';
+} from 'utils';
 
 const getActivityHistory: Function = async (event: APIGatewayEvent) => {
   const account = event.pathParameters?.userId?.toLowerCase();
@@ -17,14 +17,14 @@ const getActivityHistory: Function = async (event: APIGatewayEvent) => {
     const returnActivityTimeline = JSON.parse(user.activitiesTimeline).map(
       (h: ActivityHistoryRecord) => {
         const activity: ActivityRecord = activities.filter(
-          (a: ActivityRecord) => a.activity === h.activity
+          (a: ActivityRecord) => a.activity === h.activity,
         )[0];
         return {
           ...h,
           points: activity.points,
           name: activity.name,
         };
-      }
+      },
     );
 
     return corsSuccessResponse(returnActivityTimeline);

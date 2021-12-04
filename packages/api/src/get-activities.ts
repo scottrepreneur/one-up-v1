@@ -4,7 +4,7 @@ import {
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
-} from './utils';
+} from 'utils';
 
 const getUser: Function = async (event: APIGatewayEvent) => {
   const account = event.pathParameters?.userId?.toLowerCase();

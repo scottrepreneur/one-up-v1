@@ -1,5 +1,6 @@
 import { parseISO, isAfter, formatDistanceToNow } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
+import _ from 'lodash';
 
 import { DAY_START, TIMEZONE } from './constants';
 import { ActivityHistoryRecord, ActivityRecord } from './definitions';
@@ -12,7 +13,7 @@ export const getActivities = (
   let timeSinceActivities = [];
 
   if (timeSince) {
-    timeSinceActivities = activityHistory.filter((e) =>
+    timeSinceActivities = _.filter(activityHistory, (e) =>
       isAfter(parseISO(e.timestamp), Date.now() - timeSince),
     );
   } else {
@@ -43,13 +44,15 @@ export const getActivities = (
         TIMEZONE,
       );
     }
-    timeSinceActivities = activityHistory.filter((e) =>
+    timeSinceActivities = _.filter(activityHistory, (e) =>
       isAfter(parseISO(e.timestamp), timestamp),
     );
   }
-  const activitiesWithPoints = timeSinceActivities.map(
+  const activitiesWithPoints = _.map(
+    timeSinceActivities,
     (item: ActivityHistoryRecord) => {
-      const { points, name, category, icon, type } = activities.filter(
+      const { points, name, category, icon, type } = _.filter(
+        activities,
         (a) => a.activity === item.activity,
       )[0];
 
@@ -75,7 +78,7 @@ export const getActivitiesText = (
   let timeSinceActivities = [];
 
   if (timeSince) {
-    timeSinceActivities = activityHistory.filter((e) =>
+    timeSinceActivities = _.filter(activityHistory, (e) =>
       isAfter(parseISO(e.timestamp), Date.now() - timeSince),
     );
   } else {
@@ -107,14 +110,14 @@ export const getActivitiesText = (
         TIMEZONE,
       );
     }
-    timeSinceActivities = activityHistory.filter((e) =>
+    timeSinceActivities = _.filter(activityHistory, (e) =>
       isAfter(parseISO(e.timestamp), timestamp),
     );
   }
 
   let activitiesTextString = '';
 
-  timeSinceActivities.forEach((item: ActivityHistoryRecord) => {
+  _.forEach(timeSinceActivities, (item: ActivityHistoryRecord) => {
     const activity = activities.find((a) => a.activity === item.activity);
     if (!activity) return activitiesTextString;
 
@@ -133,11 +136,10 @@ export const getLastActivity = (
   activities: ActivityRecord[],
   activityHistory: ActivityHistoryRecord[],
 ) => {
-  const test = activityHistory.sort((a, b) =>
-    isAfter(parseISO(b.timestamp), parseISO(a.timestamp)) ? 1 : -1,
-  );
+  const test = _.sortBy(activityHistory, (a) => parseISO(a.timestamp));
   const last: any = test[0];
-  const lastActivity = activities.find(
+  const lastActivity = _.find(
+    activities,
     (activity) => activity.activity === last.activity,
   );
   return {

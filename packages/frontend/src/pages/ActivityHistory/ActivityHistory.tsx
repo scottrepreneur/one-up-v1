@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Heading, Flex, Spinner } from '@chakra-ui/react';
 import { parseISO, formatDistanceToNow } from 'date-fns';
 import { ExtendedActivityHistoryRecord } from '@one-up/common';
-import { useUser } from '../../contexts/UserContext';
+import { useUser } from 'contexts/UserContext';
 
 const ActivityHistory: React.FC = () => {
   const { activityHistory } = useUser();

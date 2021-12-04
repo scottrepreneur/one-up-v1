@@ -9,8 +9,8 @@ import {
   Spinner,
   HStack,
 } from '@chakra-ui/react';
-import { useUser } from '../../contexts/UserContext';
-import { useOverlay } from '../../contexts/OverlayContext';
+import { useUser } from 'contexts/UserContext';
+import { useOverlay } from 'contexts/OverlayContext';
 
 const ActivityDetail: React.FC = () => {
   const { activity } = useParams<{ activity: any }>();
@@ -22,7 +22,7 @@ const ActivityDetail: React.FC = () => {
   useEffect(() => {
     if (activities) {
       setActivityData(
-        activities.filter((a: any) => a.activity === activity)[0]
+        activities.filter((a: any) => a.activity === activity)[0],
       );
     }
   }, [activities, activity]);

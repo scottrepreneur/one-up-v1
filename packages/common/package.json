@@ -11,7 +11,8 @@
   "main": "src/index.ts",
   "dependencies": {
     "date-fns": "^2.26.0",
-    "date-fns-tz": "^1.1.6"
+    "date-fns-tz": "^1.1.6",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.0.0",

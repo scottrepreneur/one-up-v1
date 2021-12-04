@@ -6,10 +6,10 @@ import {
   runWarm,
   getOrCreateUser,
   updateActivities,
-} from './utils';
+} from 'utils';
 
 const updateActivity: Function = async (
-  event: APIGatewayEvent
+  event: APIGatewayEvent,
 ): Promise<any> => {
   // @ts-ignore
   const { userId, activityKey } = event.pathParameters;
@@ -21,7 +21,7 @@ const updateActivity: Function = async (
     const activitiesList = JSON.parse(user.activities);
     // console.log(activitiesList);
     const filteredActivities = activitiesList.filter(
-      (activity: any) => activity.activity !== activityData.activity
+      (activity: any) => activity.activity !== activityData.activity,
     );
     const updatedActivities = [...filteredActivities, activityData];
     try {

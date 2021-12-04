@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Box, Heading, Flex, Spinner, Stack, HStack } from '@chakra-ui/react';
-import { useUser } from '../../contexts/UserContext';
+import { useUser } from 'contexts/UserContext';
 
 const Dashboard: FunctionComponent = () => {
   const { userData } = useUser();

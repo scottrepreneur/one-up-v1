@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { useParams } from 'react-router';
-import ActivityForm from '../../forms/ActivityForm';
-import { useUser } from '../../contexts/UserContext';
+import ActivityForm from 'forms/ActivityForm';
+import { useUser } from 'contexts/UserContext';
 
 const ActivityEdit: React.FC = () => {
   const { activities, updateActivity } = useUser();

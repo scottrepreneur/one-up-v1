@@ -2,13 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { Flex } from '@chakra-ui/react';
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom';
 
-import Nav from '../components/Nav';
-import Dashboard from './Dashboard';
-import ActivityCreate from './ActivityCreate';
-import ActivityEdit from './ActivityEdit';
-import ActivityDetail from './ActivityDetail';
-import ActivityHistory from './ActivityHistory';
-import ActivityList from './ActivityList';
+import Nav from 'components/Nav';
+import Dashboard from 'pages/Dashboard';
+import ActivityCreate from 'pages/ActivityCreate';
+import ActivityEdit from 'pages/ActivityEdit';
+import ActivityDetail from 'pages/ActivityDetail';
+import ActivityHistory from 'pages/ActivityHistory';
+import ActivityList from 'pages/ActivityList';
 
 const App: FunctionComponent = () => (
   <Flex

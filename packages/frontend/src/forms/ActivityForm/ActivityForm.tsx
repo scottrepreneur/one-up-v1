@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { ActivityRecord } from '@one-up/common';
 
-import { useOverlay } from '../../contexts/OverlayContext';
+import { useOverlay } from 'contexts/OverlayContext';
 
 interface ActivityFormProps {
   activity?: any;

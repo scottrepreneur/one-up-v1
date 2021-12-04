@@ -7,7 +7,7 @@ import {
   runWarm,
   getOrCreateUser,
   addActivityHistoryToDb,
-} from './utils';
+} from 'utils';
 
 const addActivityHistory: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
@@ -27,7 +27,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
         userActivities.filter((e: any) => e.activity === activityKey).length > 0
       ) {
         const { cooldown } = userActivities.filter(
-          (e: any) => e.activity === activityKey
+          (e: any) => e.activity === activityKey,
         )[0];
 
         // activity has been recorded in timeline before
@@ -40,14 +40,14 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
             .sort(
               (a: any, b: any) =>
                 parseISO(b.timestamp).getTime() -
-                parseISO(a.timestamp).getTime()
+                parseISO(a.timestamp).getTime(),
             )[0];
 
           // check cooldown has passed since last activity recorded
           if (
             isAfter(
               sub(parseISO(timestamp), { minutes: cooldown }),
-              parseISO(lastActivity.timestamp)
+              parseISO(lastActivity.timestamp),
             )
           ) {
             userActivityHistory.push({
@@ -77,7 +77,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
           try {
             const result = await addActivityHistoryToDb(
               account,
-              userActivityHistory
+              userActivityHistory,
             );
             return corsSuccessResponse({ success: result });
           } catch (err) {

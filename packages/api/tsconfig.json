@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2018",
+    "baseUrl": "./src",
     "allowJs": true,
     "skipLibCheck": false,
     "esModuleInterop": true,

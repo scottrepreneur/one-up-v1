@@ -6,7 +6,7 @@ import {
   runWarm,
   getOrCreateUser,
   addActivityToDb,
-} from './utils';
+} from 'utils';
 
 const addActivity: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();

@@ -11,7 +11,7 @@ import {
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
-} from './utils';
+} from 'utils';
 
 const getUser: Function = async (event: APIGatewayEvent) => {
   // @ts-ignore
@@ -26,25 +26,25 @@ const getUser: Function = async (event: APIGatewayEvent) => {
       user: user.userId,
       pointsToday: getScore(
         JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline)
+        JSON.parse(user.activitiesTimeline),
       ),
       activitiesToday: getActivities(
         JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline)
+        JSON.parse(user.activitiesTimeline),
       ),
       activitiesTodayText: getActivitiesText(
         JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline)
+        JSON.parse(user.activitiesTimeline),
       ),
       lastActivity: getLastActivity(
         JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline)
+        JSON.parse(user.activitiesTimeline),
       ),
       currentGoal: user.currentGoal,
       currentStreak: getStreak(
         JSON.parse(user.activities),
         JSON.parse(user.activitiesTimeline),
-        JSON.parse(user.goalHistory)
+        JSON.parse(user.goalHistory),
       ),
     });
   }

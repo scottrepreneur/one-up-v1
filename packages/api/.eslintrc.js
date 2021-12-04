@@ -17,7 +17,7 @@ module.exports = {
         ts: 'never',
       },
     ],
-    'import/no-unresolved': 'error',
+    'import/no-unresolved': 'off',
     'arrow-body-style': 'warn',
     'max-len': 'warn',
     indent: 'off',
