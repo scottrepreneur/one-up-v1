@@ -1,9 +1,11 @@
-name: App CI/CD
+name: API CI/CD
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'packages/api/**'
 
 jobs:
   primary:

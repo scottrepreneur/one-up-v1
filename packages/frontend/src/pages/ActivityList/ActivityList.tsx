@@ -23,7 +23,12 @@ const ActivityList: FunctionComponent = () => {
   };
 
   return (
-    <Flex w='70%' m='0 auto' direction='column' align='center'>
+    <Flex
+      w={{ sm: '70%' }}
+      m={{ sm: '0 auto' }}
+      direction='column'
+      align='center'
+    >
       <Heading size='xl'>Activities</Heading>
       <Grid pt={20} w='100%' templateColumns='repeat(3, 1fr)' gap={4}>
         {activities && activities.length ? (

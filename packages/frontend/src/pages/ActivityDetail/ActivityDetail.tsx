@@ -66,7 +66,12 @@ const ActivityDetail: React.FC = () => {
   };
 
   return (
-    <Flex align='center' direction='column' m='30px auto' w='40%'>
+    <Flex
+      align='center'
+      direction='column'
+      m={{ sm: '30px auto' }}
+      w={{ base: '90%', sm: '40%' }}
+    >
       <Heading size='xl' mb={6}>
         Activity Detail
       </Heading>
@@ -84,7 +89,7 @@ const ActivityDetail: React.FC = () => {
               </Flex>
             ))}
           </Stack>
-          <Flex w='100%' justify='flex-end'>
+          <Flex w='100%' justify='flex-end' my={5}>
             <HStack spacing={4}>
               <Button variant='outline' onClick={editActivity}>
                 Edit

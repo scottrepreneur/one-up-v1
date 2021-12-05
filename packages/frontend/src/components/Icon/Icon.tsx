@@ -40,6 +40,7 @@ import { SiCounterstrike } from 'react-icons/si';
 
 interface IconProps extends ChakraIconProps {
   iconKey: string;
+  props?: any;
 }
 
 export const iconMap: any = {
@@ -74,8 +75,7 @@ export const iconMap: any = {
   basket: FaShoppingBasket,
 };
 
-const Icon: React.FC<IconProps> = (props: IconProps) => {
-  const { iconKey } = props;
+const Icon: React.FC<IconProps> = ({ iconKey, ...props }: IconProps) => {
   if (iconKey in iconMap) {
     return <ChakraIcon as={iconMap[iconKey]} {...props} />;
   }

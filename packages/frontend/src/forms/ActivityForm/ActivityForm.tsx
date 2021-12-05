@@ -111,14 +111,24 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
     <Box as='form' onSubmit={handleSubmit(onSubmit)} w='80%' m='0 auto'>
       <Stack spacing={4} w='100%'>
         {activityFields.map((row) => (
-          <Flex w='100%' justify='space-between' key={row[0].label}>
+          <Flex
+            w='100%'
+            justify={{ md: 'space-between' }}
+            align={{ base: 'center', md: 'normal' }}
+            direction={{ base: 'column', md: 'row' }}
+            key={row[0].label}
+          >
             {row.map((field: ActivityFieldProps) => {
               const defaultValue: string =
                 activityData && field.key in activityData
                   ? activityData[field.key]
                   : '';
               return (
-                <Stack key={field.key} spacing={2} w='40%'>
+                <Stack
+                  key={field.key}
+                  spacing={2}
+                  w={{ base: '80%', md: '40%' }}
+                >
                   <Box color='white'>{field.label}</Box>
                   <Input
                     name={field.key}

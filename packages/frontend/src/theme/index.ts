@@ -33,6 +33,7 @@ export const theme: any = extendTheme({
       800: '#153e75',
       700: '#2a69ac',
     },
+    mainBackground: '#212121',
   },
   styles: {
     global: {

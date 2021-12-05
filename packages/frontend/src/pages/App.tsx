@@ -17,7 +17,7 @@ const App: FunctionComponent = () => (
     minHeight='100vh'
     height='100%'
     width='100%'
-    background='#212121'
+    background='mainBackground'
   >
     <Flex
       direction='column'

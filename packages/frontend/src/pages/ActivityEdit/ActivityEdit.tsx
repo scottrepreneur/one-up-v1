@@ -9,7 +9,7 @@ const ActivityEdit: React.FC = () => {
   const { activity } = useParams<{ activity: any }>();
 
   return (
-    <Box w='70%' m='0 auto'>
+    <Box w={{ md: '70%' }} m='0 auto'>
       <Heading
         size='md'
         fontWeight={700}
