@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from 'react';
+import _ from 'lodash';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -30,7 +31,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
       const result = await axios.get(
         `${API_URL}/user/${ADDRESS}/activities/history`,
       );
-      setActivityHistory(result.data);
+      setActivityHistory(_.get(result, 'data'));
     } catch (err) {
       console.log(err);
     }
@@ -39,7 +40,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
   const getActivities = async (): Promise<any> => {
     try {
       const result = await axios.get(`${API_URL}/user/${ADDRESS}/activities`);
-      setActivities(result.data);
+      setActivities(_.get(result, 'data'));
     } catch (err) {
       console.log(err);
     }
@@ -48,7 +49,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
   const getUser = async (): Promise<any> => {
     try {
       const result = await axios.get(`${API_URL}/user/${ADDRESS}`);
-      setUserData(result.data);
+      setUserData(_.get(result, 'data'));
     } catch (err) {
       console.log(err);
     }
@@ -85,7 +86,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
         `${API_URL}/user/${ADDRESS}/activities`,
         activity,
       );
-      setActivities(result.data.activities);
+      setActivities(_.get(result, 'data.activities'));
       return activity;
     } catch (err) {
       console.log(err);
@@ -96,12 +97,17 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
   const updateActivity = async (activity: any): Promise<any> => {
     try {
       const result = await axios.put(
-        `${API_URL}/user/${ADDRESS}/activities/${activity.activity}/edit`,
+        `${API_URL}/user/${ADDRESS}/activities/${_.get(
+          activity,
+          'activity',
+        )}/edit`,
         activity,
       );
-      setActivities(result.data.activities);
+      setActivities(_.get(result, 'data.activities'));
       const updatedActivity =
-        result.data.activities[result.data.activities.length - 1];
+        result.data.activities[
+          _.subtract(_.size(_.get(result, 'data.activities')), 1)
+        ];
       return updatedActivity;
     } catch (err) {
       console.log(err);

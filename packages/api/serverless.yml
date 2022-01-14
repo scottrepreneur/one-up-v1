@@ -2,8 +2,6 @@ service: one-up-api
 
 package:
   individually: true
-  exclude:
-    - ./logo.png
 
 provider:
   name: aws
@@ -29,55 +27,56 @@ custom:
     includeModules: true
     packager: 'yarn' # Packager that will be used to package your external modules
   warmup:
-    enabled: true
-    events:
-      - schedule: rate(5 minutes)
-    prewarm: true
-    concurrency: 1
+    default:
+      enabled: true
+      events:
+        - schedule: rate(5 minutes)
+      prewarm: true
+      concurrency: 1
   prune:
     automatic: true
     number: 1 # Number of versions to keep
   serverless-offline:
-    port: 4000
+    httpPort: 4000
 
 functions:
   getUser:
-    handler: src/get-user.default
+    handler: src/index.getUser
     events:
       - http:
           path: user/{userId}
           method: get
           cors: true
   addActivity:
-    handler: src/add-activity.default
+    handler: src/index.addActivity
     events:
       - http:
           path: user/{userId}/activities
           method: post
           cors: true
   updateActivity:
-    handler: src/update-activity.default
+    handler: src/index.updateActivity
     events:
       - http:
           path: user/{userId}/activities/{activityKey}/edit
           method: put
           cors: true
   addActivityHistory:
-    handler: src/add-activity-history.default
+    handler: src/index.addActivityHistory
     events:
       - http:
           path: user/{userId}/activities/{activityKey}
           method: post
           cors: true
   getActivities:
-    handler: src/get-activities.default
+    handler: src/index.getActivities
     events:
       - http:
           path: user/{userId}/activities
           method: get
           cors: true
   getActivityHistory:
-    handler: src/get-activity-history.default
+    handler: src/index.getActivityHistory
     events:
       - http:
           path: user/{userId}/activities/history

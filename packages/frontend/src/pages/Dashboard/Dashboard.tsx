@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import _ from 'lodash';
 import { Box, Heading, Flex, Spinner, Stack, HStack } from '@chakra-ui/react';
 import { useUser } from 'contexts/UserContext';
 
@@ -16,21 +17,21 @@ const Dashboard: FunctionComponent = () => {
           <Flex justify='space-between' my={100}>
             <Flex as={Stack} direction='column' align='center' spacing={4}>
               <Heading size='md'>Points Today</Heading>
-              <Heading size='2xl'>{userData?.pointsToday}</Heading>
+              <Heading size='2xl'>{_.get(userData, 'pointsToday')}</Heading>
             </Flex>
             <Flex as={Stack} direction='column' align='center' spacing={4}>
               <Heading size='md'>Current Goal</Heading>
-              <Heading size='2xl'>{userData?.currentGoal}</Heading>
+              <Heading size='2xl'>{_.get(userData, 'currentGoal')}</Heading>
             </Flex>
             <Flex as={Stack} direction='column' align='center' spacing={4}>
               <Heading size='md'>Current Streak</Heading>
-              <Heading size='2xl'>{userData?.currentStreak}</Heading>
+              <Heading size='2xl'>{_.get(userData, 'currentStreak')}</Heading>
             </Flex>
           </Flex>
           <Flex as={HStack} spacing={6} justify='center'>
             <Box>
               <Box>Last Activity</Box>
-              <Box>{userData?.lastActivity?.name}</Box>
+              <Box>{_.get(userData, 'lastActivity.name')}</Box>
             </Box>
           </Flex>
         </Stack>

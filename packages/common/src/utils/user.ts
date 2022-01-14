@@ -1,87 +1,52 @@
+/* eslint-disable import/prefer-default-export */
 import { parseISO, isAfter, sub, isBefore } from 'date-fns';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import _ from 'lodash';
 
-import { DAY_START, TIMEZONE } from './constants';
-import {
-  ActivityRecord,
-  ActivityHistoryRecord,
-  GoalRecord,
-} from './definitions';
+import { IActivity, IActivityHistory, IGoal } from './definitions';
+import { handleTimestamp } from './general';
+import { activitiesSince } from './activities';
+import { pointsForTimePeriod } from './score';
 
 const isDuringDay = (value: any, timeStart: any, timeEnd: any) => {
-  // console.log(value);
   return isAfter(value, timeStart) && isBefore(value, timeEnd);
 };
 
 export const getStreak = (
-  activities: ActivityRecord[],
-  activityHistory: ActivityHistoryRecord[],
-  goalHistory: GoalRecord[],
+  activities: IActivity[],
+  activityHistory: IActivityHistory[],
+  goalHistory: IGoal[],
 ) => {
-  let streak = 0;
+  const streak = 0;
   let streakBreak = false;
-  const { goal } = goalHistory[0];
-  // const goal = 3;
-  // console.log(goal);
-  // console.log(activityHistory);
-
+  const goal = _.first(goalHistory);
   // set time cut off
-  const today = parseISO(new Date().toISOString());
-
-  let timestamp: any = null;
-  if (today.getHours() < 7) {
-    timestamp = zonedTimeToUtc(
-      new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() - 1,
-        DAY_START,
-        0,
-        0,
-      ),
-      TIMEZONE,
-    );
-  } else {
-    timestamp = zonedTimeToUtc(
-      new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate(),
-        DAY_START,
-        0,
-        0,
-      ),
-      TIMEZONE,
-    );
-  }
 
   do {
     // get last 0200 timestamp
     // filter activities since timestamp
     let activitiesForDay = [];
 
-    if (streak === 0) {
-      activitiesForDay = activityHistory.filter((e) => {
-        return isAfter(parseISO(e.timestamp), timestamp);
-      });
+    if (_.isEqual(streak, 0)) {
+      activitiesForDay = activitiesSince(activityHistory, handleTimestamp());
     } else {
-      const timestampStart = sub(timestamp, { days: streak + 1 });
-      const timestampEnd =
-        streak > 1 ? sub(timestamp, { days: streak }) : timestamp;
-      activitiesForDay = activityHistory.filter((e) =>
+      const timestampStart = sub(parseISO(handleTimestamp()), {
+        days: streak + 1,
+      });
+      const timestampEnd = _.gt(streak, 1)
+        ? sub(parseISO(handleTimestamp()), { days: streak })
+        : handleTimestamp();
+      activitiesForDay = _.filter(activityHistory, (e) =>
         isDuringDay(parseISO(e.timestamp), timestampStart, timestampEnd),
       );
     }
 
-    const pointsForDay = activitiesForDay.map((e) => {
-      const { points } = activities.filter((a) => a.activity === e.activity)[0];
-
-      return points;
-    });
-
-    const sumForDay = pointsForDay.reduce((a, b) => a + b, 0);
-    if (sumForDay && sumForDay >= goal) {
-      streak += 1;
+    if (
+      _.gte(
+        pointsForTimePeriod(activities, activitiesForDay),
+        _.get(goal, 'goal'),
+      )
+    ) {
+      _.add(streak, 1);
     } else {
       streakBreak = true;
     }
@@ -89,5 +54,3 @@ export const getStreak = (
 
   return streak;
 };
-
-export const getGoal = () => {};

@@ -1,4 +1,4 @@
-export interface ActivityRecord {
+export interface IActivity {
   activity: string;
   name: string;
   type: string;
@@ -12,22 +12,22 @@ export interface ActivityRecord {
   updated: string;
 }
 
-export interface ActivityHistoryRecord {
+export interface IActivityHistory {
   activity: string;
   timestamp: string;
 }
 
-export interface GoalRecord {
+export interface IGoal {
   goal: number;
   timestamp: string;
 }
 
-export interface UserRecord {
+export interface IUser {
   userId: string;
   currentGoal: number;
   goalHistory: Array<string>;
-  activities: Array<ActivityRecord>;
-  activitiesTimeline: Array<ActivityHistoryRecord>;
+  activities: Array<IActivity>;
+  activitiesTimeline: Array<IActivityHistory>;
   email: string;
   emailPreferences: {
     marketing: boolean;
@@ -38,7 +38,7 @@ export interface UserRecord {
   timezone: string;
 }
 
-export interface StringifiedUserRecord {
+export interface IStringifiedUser {
   userId: string;
   currentGoal: number;
   goalHistory: string;
@@ -51,7 +51,7 @@ export interface StringifiedUserRecord {
   timezone: string;
 }
 
-export interface ExtendedActivityHistoryRecord {
+export interface IExtendedActivityHistory {
   activity: string;
   timestamp: string;
   name: string;

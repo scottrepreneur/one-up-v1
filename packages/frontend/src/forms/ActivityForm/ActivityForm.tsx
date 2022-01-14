@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { Box, Input, Button, Flex, Stack, HStack } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import { ActivityRecord } from '@one-up/common';
 
 import { useOverlay } from 'contexts/OverlayContext';
 
@@ -22,12 +22,12 @@ const ActivityForm: React.FC<ActivityFormProps> = ({
   const { register, handleSubmit, errors } = useForm();
   const { successToast, errorToast } = useOverlay();
   const history = useHistory();
-  const usedKeys = activities?.map((a: ActivityRecord) => a.activity);
+  const usedKeys = _.map(activities, 'activity');
   const [activityData, setActivityData] = useState<{ [key: string]: string }>();
   // console.log(activities);
   useEffect(() => {
     if (activity && activities) {
-      const localData = activities.filter((a) => a.activity === activity);
+      const localData = _.filter(activities, ['activity', activity]);
       if (localData.length) {
         setActivityData(localData[0]);
       }

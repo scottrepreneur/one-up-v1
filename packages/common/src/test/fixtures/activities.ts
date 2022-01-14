@@ -1,0 +1,43 @@
+const activityList = [
+  {
+    activity: 'made-bed',
+    name: 'Made the bed',
+    type: 'chain',
+    category: 'home',
+    icon: 'bed',
+    points: 1,
+    cooldown: 60,
+    frequency: 1,
+    frequencyPeriod: 'day',
+    timestamp: '2022-01-14T16:56:05.186Z',
+    updated: '2022-01-14T16:56:05.186Z',
+  },
+  {
+    activity: 'shower',
+    name: 'Took a Shower',
+    type: 'chain',
+    category: 'health',
+    icon: 'shower',
+    points: 2,
+    cooldown: 60,
+    frequency: 1,
+    frequencyPeriod: 'day',
+    timestamp: '2022-01-10T16:56:05.186Z',
+    updated: '2022-01-10T16:56:05.186Z',
+  },
+  {
+    activity: 'teeth',
+    name: 'Brushed teeth',
+    type: 'chain',
+    category: 'health',
+    icon: 'teeth',
+    points: 2,
+    cooldown: 60,
+    frequency: 2,
+    frequencyPeriod: 'day',
+    timestamp: '2022-01-05T16:56:05.186Z',
+    updated: '2022-01-05T16:56:05.186Z',
+  },
+];
+
+export default activityList;

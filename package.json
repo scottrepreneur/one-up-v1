@@ -14,7 +14,8 @@
     "web:start": "yarn workspace frontend start",
     "web:test": "yarn workspace frontend test",
     "web:lint": "yarn workspace frontend lint",
-    "web:add": "yarn workspace frontend add"
+    "web:add": "yarn workspace frontend add",
+    "common:test": "yarn workspace @one-up/common test"
   },
   "workspaces": {
     "packages": [

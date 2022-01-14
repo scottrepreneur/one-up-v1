@@ -1,4 +1,5 @@
 import { APIGatewayEvent } from 'aws-lambda';
+import _ from 'lodash';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -7,14 +8,14 @@ import {
 } from './utils';
 
 const getUser: Function = async (event: APIGatewayEvent) => {
-  const account = event.pathParameters?.userId?.toLowerCase();
+  const account = _.toLower(_.get(event, 'pathParameters.userId'));
 
-  if (account) {
-    const user = await getOrCreateUser(account);
-
-    return corsSuccessResponse(JSON.parse(user.activities));
+  if (!account) {
+    return corsErrorResponse({ error: 'No user found' });
   }
-  return corsErrorResponse({ error: 'No user found' });
+  return getOrCreateUser(account)
+    .then((user) => corsSuccessResponse(JSON.parse(_.get(user, 'activities'))))
+    .catch((error) => corsErrorResponse({ error }));
 };
 
 export default runWarm(getUser);

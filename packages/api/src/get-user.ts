@@ -1,4 +1,5 @@
 import { APIGatewayEvent } from 'aws-lambda';
+import _ from 'lodash';
 import {
   getActivities,
   getActivitiesText,
@@ -14,41 +15,37 @@ import {
 } from './utils';
 
 const getUser: Function = async (event: APIGatewayEvent) => {
-  // @ts-ignore
-  const account = event.pathParameters.userId.toLowerCase();
-
-  if (account) {
-    const user = await getOrCreateUser(account);
-    // console.log('points 24hr: ', getScore(JSON.parse(user.activities),
-    // JSON.parse(user.activitiesTimeline), 86400));
-
-    return corsSuccessResponse({
-      user: user.userId,
+  const account = _.get(event, 'pathParameters.userId');
+  if (!account) {
+    return corsErrorResponse({ error: 'No user found' });
+  }
+  return getOrCreateUser(account).then((user) =>
+    corsSuccessResponse({
+      user: _.get(user, 'userId'),
       pointsToday: getScore(
-        JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline),
+        JSON.parse(_.get(user, 'activities')),
+        JSON.parse(_.get(user, 'activitiesTimeline')),
       ),
       activitiesToday: getActivities(
-        JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline),
+        JSON.parse(_.get(user, 'activities')),
+        JSON.parse(_.get(user, 'activitiesTimeline')),
       ),
       activitiesTodayText: getActivitiesText(
-        JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline),
+        JSON.parse(_.get(user, 'activities')),
+        JSON.parse(_.get(user, 'activitiesTimeline')),
       ),
       lastActivity: getLastActivity(
-        JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline),
+        JSON.parse(_.get(user, 'activities')),
+        JSON.parse(_.get(user, 'activitiesTimeline')),
       ),
-      currentGoal: user.currentGoal,
+      currentGoal: _.get(user, 'currentGoal'),
       currentStreak: getStreak(
-        JSON.parse(user.activities),
-        JSON.parse(user.activitiesTimeline),
-        JSON.parse(user.goalHistory),
+        JSON.parse(_.get(user, 'activities')),
+        JSON.parse(_.get(user, 'activitiesTimeline')),
+        JSON.parse(_.get(user, 'goalHistory')),
       ),
-    });
-  }
-  return corsErrorResponse({ error: 'No user found' });
+    }),
+  );
 };
 
 export default runWarm(getUser);

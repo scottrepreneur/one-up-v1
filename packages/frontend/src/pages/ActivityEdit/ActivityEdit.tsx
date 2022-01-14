@@ -10,15 +10,7 @@ const ActivityEdit: React.FC = () => {
 
   return (
     <Box w={{ md: '70%' }} m='0 auto'>
-      <Heading
-        size='md'
-        fontWeight={700}
-        textAlign='center'
-        mt={25}
-        color='white'
-        mb={6}
-        textTransform='capitalize'
-      >
+      <Heading size='md' textAlign='center' mt={25} mb={6}>
         {`Update ${activity}`}
       </Heading>
       <ActivityForm

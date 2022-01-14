@@ -1,5 +1,8 @@
 import { extendTheme } from '@chakra-ui/react';
 
+import Button from './Button';
+import Heading from './Heading';
+
 // const customColors = {
 //   white: '#ffffff',
 //   black: '#000000',
@@ -48,38 +51,7 @@ export const theme: any = extendTheme({
     },
   },
   components: {
-    Heading: {
-      baseStyle: {
-        fontFamily: 'calling-code',
-      },
-    },
-    Button: {
-      baseStyle: {
-        textTransform: 'uppercase',
-        fontWeight: 700,
-        _hover: {
-          fontWeight: 900,
-        },
-      },
-      variants: {
-        primary: {
-          bg: 'brand.900',
-          color: 'white',
-          _hover: {
-            bg: 'brand.800',
-          },
-        },
-        outline: {
-          bg: 'transparent',
-          border: '1px',
-          borderColor: 'brand.700',
-          color: 'brand.700',
-          _hover: {
-            bg: 'brand.900',
-            color: 'whiteAlpha.800',
-          },
-        },
-      },
-    },
+    Heading,
+    Button,
   },
 });

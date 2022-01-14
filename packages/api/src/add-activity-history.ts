@@ -1,6 +1,7 @@
 import { APIGatewayEvent } from 'aws-lambda';
+import _ from 'lodash';
 import { sub, parseISO, isAfter } from 'date-fns';
-import { ActivityHistoryRecord } from '@one-up/common';
+import { ActivityHistoryRecord, getLastActivity } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -8,93 +9,64 @@ import {
   getOrCreateUser,
   addActivityHistoryToDb,
 } from './utils';
+import { addHistoryForActivity } from './utils/temp';
 
 const addActivityHistory: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
-  const account: any = event.pathParameters?.userId?.toLowerCase();
-  const activityKey: any = event.pathParameters?.activityKey?.toLowerCase();
+  const account: any = _.toLower(_.get(event, 'pathParameters.userId'));
+  const activityKey: any = _.toLower(
+    _.get(event, 'pathParameters.activityKey'),
+  );
   let userActivityHistory: ActivityHistoryRecord[] = [];
 
-  if (account) {
-    try {
-      const user = await getOrCreateUser(account);
+  if (!account) {
+    return corsErrorResponse({ error: 'No `userId` found' });
+  }
 
-      userActivityHistory = JSON.parse(user.activitiesTimeline);
-      const userActivities = JSON.parse(user.activities);
+  return getOrCreateUser(account).then((user) => {
+    userActivityHistory = JSON.parse(_.get(user, 'activitiesTimeline'));
+    const userActivities = JSON.parse(_.get(user, 'activities'));
 
-      // check the activity exists for the user
-      if (
-        userActivities.filter((e: any) => e.activity === activityKey).length > 0
-      ) {
-        const { cooldown } = userActivities.filter(
-          (e: any) => e.activity === activityKey,
-        )[0];
-
-        // activity has been recorded in timeline before
-        if (
-          userActivityHistory.filter((e: any) => e.activity === activityKey)
-            .length > 0
-        ) {
-          const lastActivity: ActivityHistoryRecord = userActivityHistory
-            .filter((e: any) => e.activity === activityKey)
-            .sort(
-              (a: any, b: any) =>
-                parseISO(b.timestamp).getTime() -
-                parseISO(a.timestamp).getTime(),
-            )[0];
-
-          // check cooldown has passed since last activity recorded
-          if (
-            isAfter(
-              sub(parseISO(timestamp), { minutes: cooldown }),
-              parseISO(lastActivity.timestamp),
-            )
-          ) {
-            userActivityHistory.push({
-              activity: activityKey,
-              timestamp,
-            });
-
-            try {
-              await addActivityHistoryToDb(account, userActivityHistory);
-              // console.log(result);
-              return corsSuccessResponse({ success: true });
-            } catch (err) {
-              return corsErrorResponse({ error: err });
-            }
-          } else {
-            // TODO update activity cool down time
-            return corsErrorResponse({
-              error: `Cool down for ${activityKey} has not expired. Try again in [TODO]`,
-            });
-          }
-        } else {
-          userActivityHistory.push({
-            activity: activityKey,
-            timestamp,
-          });
-
-          try {
-            const result = await addActivityHistoryToDb(
-              account,
-              userActivityHistory,
-            );
-            return corsSuccessResponse({ success: result });
-          } catch (err) {
-            return corsErrorResponse({ error: err });
-          }
-        }
-      }
-
+    // check the activity exists for the user
+    if (_.isEmpty(_.filter(userActivities, ['activity', activityKey]))) {
       return corsErrorResponse({
         error: `No activity found with key: ${activityKey}`,
       });
-    } catch (err) {
-      console.log(err);
-      return corsErrorResponse({ error: err });
     }
-  }
-  return corsErrorResponse({ error: 'No `userId` found' });
+
+    // activity has not been recorded in timeline before
+    if (_.isEmpty(_.filter(userActivityHistory, ['activity', activityKey]))) {
+      userActivityHistory.push({
+        activity: activityKey,
+        timestamp,
+      });
+
+      return addHistoryForActivity(account, activityKey, userActivityHistory)
+        .then((result) => corsSuccessResponse({ success: true, result }))
+        .catch((error) => corsErrorResponse({ error }));
+    }
+
+    const { cooldown } = _.first(
+      _.filter(userActivities, ['activity', activityKey]),
+    );
+    const lastActivity = getLastActivity(
+      userActivities,
+      userActivityHistory,
+      activityKey,
+    );
+
+    if (
+      _.get(lastActivity, 'timestamp') &&
+      isAfter(
+        sub(parseISO(timestamp), { minutes: cooldown }),
+        parseISO(_.get(lastActivity, 'timestamp') || ''),
+      )
+    ) {
+      return addActivityHistoryToDb(account, userActivityHistory)
+        .then((result) => corsSuccessResponse({ success: true, result }))
+        .catch((error) => corsErrorResponse({ error }));
+    }
+  });
 };
 
 export default runWarm(addActivityHistory);

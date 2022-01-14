@@ -9,7 +9,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
-import { ActivityRecord } from '@one-up/common';
+import { IActivity } from '@one-up/common';
 import { useUser } from 'contexts/UserContext';
 import Icon from 'components/Icon';
 
@@ -32,7 +32,7 @@ const ActivityList: FunctionComponent = () => {
       <Heading size='xl'>Activities</Heading>
       <Grid pt={20} w='100%' templateColumns='repeat(3, 1fr)' gap={4}>
         {activities && activities.length ? (
-          activities.map((activity: ActivityRecord) => (
+          activities.map((activity: IActivity) => (
             <GridItem
               key={activity.activity}
               _hover={{

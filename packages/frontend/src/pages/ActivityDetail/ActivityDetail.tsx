@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { useParams, useHistory } from 'react-router-dom';
 import {
   Box,
@@ -21,9 +22,7 @@ const ActivityDetail: React.FC = () => {
 
   useEffect(() => {
     if (activities) {
-      setActivityData(
-        activities.filter((a: any) => a.activity === activity)[0],
-      );
+      setActivityData(_.find(activities, ['activity', activity]));
     }
   }, [activities, activity]);
   console.log(activityData);
@@ -79,11 +78,11 @@ const ActivityDetail: React.FC = () => {
         <>
           <Stack spacing={3} w='100%'>
             {detailFields.map((row) => (
-              <Flex justify='space-around' key={row[0].label}>
+              <Flex justify='space-around' key={_.get(_.first(row), 'label')}>
                 {row.map((field) => (
-                  <Stack spacing={3} w='40%' key={field.label}>
-                    <Heading size='sm'>{field.label}</Heading>
-                    <Box>{activityData?.[field.param]}</Box>
+                  <Stack spacing={3} w='40%' key={_.get(field, 'label')}>
+                    <Heading size='sm'>{_.get(field, 'label')}</Heading>
+                    <Box>{_.get(activityData, _.get(field, 'param'))}</Box>
                   </Stack>
                 ))}
               </Flex>

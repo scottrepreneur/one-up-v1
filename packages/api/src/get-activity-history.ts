@@ -1,5 +1,6 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import { ActivityRecord, ActivityHistoryRecord } from '@one-up/common';
+import _ from 'lodash';
+import { IActivity, IActivityHistory } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -8,28 +9,30 @@ import {
 } from './utils';
 
 const getActivityHistory: Function = async (event: APIGatewayEvent) => {
-  const account = event.pathParameters?.userId?.toLowerCase();
+  const account = _.get(event, 'pathParameters.userId');
 
-  if (account) {
-    const user = await getOrCreateUser(account);
-    const activities = JSON.parse(user.activities);
-
-    const returnActivityTimeline = JSON.parse(user.activitiesTimeline).map(
-      (h: ActivityHistoryRecord) => {
-        const activity: ActivityRecord = activities.filter(
-          (a: ActivityRecord) => a.activity === h.activity,
-        )[0];
-        return {
-          ...h,
-          points: activity.points,
-          name: activity.name,
-        };
-      },
-    );
-
-    return corsSuccessResponse(returnActivityTimeline);
+  if (!account) {
+    return corsErrorResponse({ error: 'No user found' });
   }
-  return corsErrorResponse({ error: 'No user found' });
+  return getOrCreateUser(account)
+    .then((user) => {
+      const activities = JSON.parse(_.get(user, 'activities'));
+
+      const returnActivityTimeline = JSON.parse(
+        _.get(user, 'activitiesTimeline'),
+      ).map((historyRecord: IActivityHistory) => {
+        const activity: IActivity = _.first(
+          _.filter(activities, ['activity', historyRecord.activity]),
+        );
+        return {
+          ...historyRecord,
+          ...activity,
+        };
+      });
+
+      return corsSuccessResponse(returnActivityTimeline);
+    })
+    .catch((error) => corsErrorResponse({ error }));
 };
 
 export default runWarm(getActivityHistory);

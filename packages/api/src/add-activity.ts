@@ -1,4 +1,5 @@
 import { APIGatewayEvent } from 'aws-lambda';
+import _ from 'lodash';
 import { ActivityRecord } from '@one-up/common';
 import {
   corsSuccessResponse,
@@ -10,50 +11,42 @@ import {
 
 const addActivity: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
-  const activity: ActivityRecord = JSON.parse(event.body || '{}');
-  const account = event.pathParameters?.userId?.toLowerCase();
+  const activity: ActivityRecord = JSON.parse(_.get(event, 'body') || '{}');
+  const account = _.toLower(_.get(event, 'pathParameters.userId'));
   let userActivities: ActivityRecord[] = [];
 
-  if (account) {
-    const user = await getOrCreateUser(account);
-    if (user) {
-      userActivities = JSON.parse(user.activities);
-      if (
-        userActivities.filter((e) => e.activity === activity.activity)
-          .length === 0
-      ) {
-        const newActivity: ActivityRecord = {
-          activity: activity.activity,
-          name: activity.name || 'Default activity',
-          type: activity.type || 'chain',
-          category: activity.category || 'home',
-          icon: activity.icon || 'one-up',
-          points: activity.points || 1,
-          cooldown: activity.cooldown || 30,
-          frequency: activity.frequency || 1,
-          frequencyPeriod: activity.frequencyPeriod || 'day',
-          timestamp,
-          updated: timestamp,
-        };
-        userActivities.push(newActivity);
-      } else {
-        return corsErrorResponse({
-          error: `activity with key '${activity.activity}' already exists`,
-        });
-      }
+  if (!account) {
+    return corsErrorResponse({ error: 'No userId found' });
+  }
+
+  return getOrCreateUser(account).then((user) => {
+    userActivities = JSON.parse(_.get(user, 'activities'));
+
+    if (!_.isEmpty(_.filter(userActivities, ['activity', activity.activity]))) {
+      return corsErrorResponse({
+        error: `activity with key '${activity.activity}' already exists`,
+      });
     }
 
-    try {
-      const result = await addActivityToDb(account, userActivities);
-      console.log(result);
-      const response = corsSuccessResponse({ success: true });
-      return response;
-    } catch (err) {
-      const response = corsErrorResponse({ error: err });
-      return response;
-    }
-  }
-  return null;
+    const newActivity: ActivityRecord = {
+      activity: activity.activity,
+      name: activity.name || 'Default activity',
+      type: activity.type || 'chain',
+      category: activity.category || 'home',
+      icon: activity.icon || 'one-up',
+      points: activity.points || 1,
+      cooldown: activity.cooldown || 30,
+      frequency: activity.frequency || 1,
+      frequencyPeriod: activity.frequencyPeriod || 'day',
+      timestamp,
+      updated: timestamp,
+    };
+    userActivities.push(newActivity);
+
+    return addActivityToDb(account, userActivities)
+      .then((result) => corsSuccessResponse({ success: true, result }))
+      .catch((error) => corsErrorResponse({ error }));
+  });
 };
 
 export default runWarm(addActivity);

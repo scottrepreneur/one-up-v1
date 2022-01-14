@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { Box, Heading, Flex, Spinner } from '@chakra-ui/react';
 import { parseISO, formatDistanceToNow } from 'date-fns';
-import { ExtendedActivityHistoryRecord } from '@one-up/common';
+import { IExtendedActivityHistory } from '@one-up/common';
 import { useUser } from 'contexts/UserContext';
 
 const ActivityHistory: React.FC = () => {
   const { activityHistory } = useUser();
-  const [sortedHistory, setSortedHistory] = useState([]);
-  console.log(activityHistory);
+  const [sortedHistory, setSortedHistory] = useState<
+    Array<IExtendedActivityHistory>
+  >([]);
 
   useEffect(() => {
     if (activityHistory) {
-      const tempHistory = activityHistory?.sort(
-        (a: ExtendedActivityHistoryRecord, b: ExtendedActivityHistoryRecord) =>
-          parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime(),
+      const tempHistory = _.orderBy(
+        activityHistory,
+        (a: IExtendedActivityHistory) => parseISO(_.get(a, 'timestamp')),
+        'desc',
       );
       setSortedHistory(tempHistory);
     }
@@ -27,10 +30,12 @@ const ActivityHistory: React.FC = () => {
       align='center'
       justify='center'
     >
-      <Heading size='xl' color='white'>
-        Activity History
-      </Heading>
-      {sortedHistory.length ? (
+      <Heading size='xl'>Activity History</Heading>
+      {_.isEmpty(sortedHistory) ? (
+        <Flex w='100%' h='250px' align='center' justify='center'>
+          <Spinner size='xl' />
+        </Flex>
+      ) : (
         <Box mt={{ base: 10, sm: 20 }} w='100%'>
           <Flex
             w={{ base: '100%', sm: '90%' }}
@@ -38,31 +43,19 @@ const ActivityHistory: React.FC = () => {
             m='0 auto'
             justify='space-between'
           >
-            <Box
-              color='white'
-              w={{ base: '35%', sm: '30%' }}
-              textAlign='center'
-            >
+            <Box w={{ base: '35%', sm: '30%' }} textAlign='center'>
               Activity
             </Box>
-            <Box
-              color='white'
-              w={{ base: '20%', sm: '30%' }}
-              textAlign='center'
-            >
+            <Box w={{ base: '20%', sm: '30%' }} textAlign='center'>
               Points
             </Box>
-            <Box
-              color='white'
-              w={{ base: '35%', sm: '30%' }}
-              textAlign='center'
-            >
+            <Box w={{ base: '35%', sm: '30%' }} textAlign='center'>
               Date
             </Box>
           </Flex>
-          {sortedHistory?.map((h: ExtendedActivityHistoryRecord) => (
+          {_.map(sortedHistory, (h: IExtendedActivityHistory) => (
             <Flex
-              key={h.timestamp}
+              key={_.get(h, 'timestamp')}
               w={{ sm: '90%' }}
               h='45px'
               m='0 auto'
@@ -73,29 +66,25 @@ const ActivityHistory: React.FC = () => {
                 w={{ base: '35%', sm: '30%' }}
                 textAlign='center'
               >
-                {h.name}
+                {_.get(h, 'name')}
               </Box>
               <Box
                 color='white'
                 w={{ base: '20%', sm: '30%' }}
                 textAlign='center'
               >
-                {h.points}
+                {_.get(h, 'points')}
               </Box>
               <Box
                 color='white'
                 w={{ base: '35%', sm: '30%' }}
                 textAlign='center'
               >
-                {`${formatDistanceToNow(parseISO(h.timestamp))} ago`}
+                {`${formatDistanceToNow(parseISO(_.get(h, 'timestamp')))} ago`}
               </Box>
             </Flex>
           ))}
         </Box>
-      ) : (
-        <Flex w='100%' h='250px' align='center' justify='center'>
-          <Spinner size='xl' />
-        </Flex>
       )}
     </Flex>
   );

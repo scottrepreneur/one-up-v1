@@ -1,59 +1,40 @@
-import { parseISO, isAfter, sub } from 'date-fns';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import _ from 'lodash';
 
-import { DAY_START, TIMEZONE } from './constants';
-import { ActivityHistoryRecord, ActivityRecord } from './definitions';
+import { IActivityHistory, IActivity } from './definitions';
+import { handleTimestamp } from './general';
+import { activitiesSince } from './activities';
 
 export const getScore = (
-  activities: ActivityRecord[],
-  activityHistory: ActivityHistoryRecord[],
-  timeSince?: number,
+  activities: IActivity[],
+  activityHistory: IActivityHistory[],
+  timeSince?: string,
 ) => {
-  let timeSinceActivities = [];
-
-  if (timeSince) {
-    timeSinceActivities = activityHistory.filter((e) =>
-      isAfter(parseISO(e.timestamp), sub(Date.now(), { minutes: timeSince })),
-    );
-  } else {
-    const today = new Date();
-    let timestamp: any = null;
-    if (today.getHours() < 7) {
-      timestamp = zonedTimeToUtc(
-        new Date(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate() - 1,
-          DAY_START,
-          0,
-          0,
-        ),
-        TIMEZONE,
-      );
-    } else {
-      timestamp = zonedTimeToUtc(
-        new Date(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate(),
-          DAY_START,
-          0,
-          0,
-        ),
-        TIMEZONE,
-      );
-    }
-    timeSinceActivities = activityHistory.filter((e) =>
-      isAfter(parseISO(e.timestamp), timestamp),
-    );
-  }
-
-  const activitiesWithPoints = timeSinceActivities.map(
-    (item: ActivityHistoryRecord) =>
-      activities.filter((a) => a.activity === item.activity)[0].points,
+  const timeSinceActivities = activitiesSince(
+    activityHistory,
+    timeSince || handleTimestamp(),
   );
 
-  return activitiesWithPoints.reduce((a, b) => a + b, 0);
+  const activitiesWithPoints = _.map(
+    timeSinceActivities,
+    (item: IActivityHistory) =>
+      _.get(
+        _.find(activities, ['activity', _.get(item, 'activity')]),
+        'points',
+      ),
+  );
+
+  return _.sum(activitiesWithPoints);
 };
 
-export const test = () => 0;
+export const pointsForTimePeriod = (
+  activities: IActivity[],
+  activitiesForTimePeriod: IActivityHistory[],
+): number => {
+  return (
+    _.sum(
+      _.map(activitiesForTimePeriod, (e) =>
+        _.get(_.find(activities, ['activity', e.activity]), 'points'),
+      ),
+    ) || 0
+  );
+};
