@@ -1,7 +1,7 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import _ from 'lodash';
 import { sub, parseISO, isAfter } from 'date-fns';
-import { ActivityHistoryRecord, getLastActivity } from '@one-up/common';
+import { IActivityHistory, getLastActivity } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -17,7 +17,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
   const activityKey: any = _.toLower(
     _.get(event, 'pathParameters.activityKey'),
   );
-  let userActivityHistory: ActivityHistoryRecord[] = [];
+  let userActivityHistory: IActivityHistory[] = [];
 
   if (!account) {
     return corsErrorResponse({ error: 'No `userId` found' });

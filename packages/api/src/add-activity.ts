@@ -1,6 +1,6 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import _ from 'lodash';
-import { ActivityRecord } from '@one-up/common';
+import { IActivity } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -11,9 +11,9 @@ import {
 
 const addActivity: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
-  const activity: ActivityRecord = JSON.parse(_.get(event, 'body') || '{}');
+  const activity: IActivity = JSON.parse(_.get(event, 'body') || '{}');
   const account = _.toLower(_.get(event, 'pathParameters.userId'));
-  let userActivities: ActivityRecord[] = [];
+  let userActivities: IActivity[] = [];
 
   if (!account) {
     return corsErrorResponse({ error: 'No userId found' });
@@ -28,7 +28,7 @@ const addActivity: Function = async (event: APIGatewayEvent) => {
       });
     }
 
-    const newActivity: ActivityRecord = {
+    const newActivity: IActivity = {
       activity: activity.activity,
       name: activity.name || 'Default activity',
       type: activity.type || 'chain',

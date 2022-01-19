@@ -1,6 +1,6 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import _ from 'lodash';
-import { ActivityRecord } from '@one-up/common';
+import { IActivity } from '@one-up/common';
 import {
   corsSuccessResponse,
   corsErrorResponse,
@@ -14,7 +14,7 @@ const updateActivity: Function = async (
 ): Promise<any> => {
   // @ts-ignore
   const { userId, activityKey } = _.get(event, 'pathParameters');
-  const activityData: ActivityRecord = JSON.parse(event.body || '{}');
+  const activityData: IActivity = JSON.parse(event.body || '{}');
   activityData.points = parseFloat(_.get(activityData, 'points'));
 
   if (!userId || !activityKey || !activityData) {

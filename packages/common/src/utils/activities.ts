@@ -80,5 +80,8 @@ export const getLastActivity = (
     'activity',
     _.get(_.first(recentActivities), 'activity'),
   ]);
-  return lastActivity;
+  return {
+    ...lastActivity,
+    ..._.first(recentActivities),
+  };
 };

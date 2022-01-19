@@ -1,11 +1,11 @@
 /* eslint-disable import/prefer-default-export */
-import { ActivityHistoryRecord } from '@one-up/common';
+import { IActivityHistory } from '@one-up/common';
 import { addActivityHistoryToDb } from './one-up-queries';
 
 export const addHistoryForActivity = async (
   user: string,
   activityKey: string,
-  activityHistory: ActivityHistoryRecord[],
+  activityHistory: IActivityHistory[],
 ): Promise<any> => {
   const timestamp = new Date().toISOString();
 
