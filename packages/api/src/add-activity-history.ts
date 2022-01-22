@@ -7,7 +7,6 @@ import {
   corsErrorResponse,
   runWarm,
   getOrCreateUser,
-  addActivityHistoryToDb,
 } from './utils';
 import { addHistoryForActivity } from './utils/temp';
 
@@ -62,7 +61,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
         parseISO(_.get(lastActivity, 'timestamp') || ''),
       )
     ) {
-      return addActivityHistoryToDb(account, userActivityHistory)
+      return addHistoryForActivity(account, activityKey, userActivityHistory)
         .then((result) => corsSuccessResponse({ success: true, result }))
         .catch((error) => corsErrorResponse({ error }));
     }
