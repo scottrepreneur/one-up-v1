@@ -9,9 +9,9 @@ const todayUtc = () => _.gt(new Date().getHours(), 6); // TODO handle differnt t
 
 describe('Score Utilities', () => {
   describe('getScore()', () => {
-    it('should return 0 or 2 for score, depending on todayUtc', () => {
+    it('should return 5 or 0 for score, depending on todayUtc', () => {
       const a = getScore(activityList, activityHistory);
-      assert.equal(a, todayUtc() ? 2 : 0);
+      assert.equal(a, todayUtc() ? 5 : 0);
     });
   });
 });

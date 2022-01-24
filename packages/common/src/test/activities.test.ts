@@ -19,14 +19,14 @@ const getTimestampInFuture = () => {
 
 describe('Activities Utilities', () => {
   describe('activitiesSince()', () => {
-    it('should return 2 activties since 1/1/2022', () => {
+    it('should return 4 activties since 1/1/2022', () => {
       const a = activitiesSince(activityHistory, getPastTimestamp(6));
-      assert.equal(_.size(a), 2);
+      assert.equal(_.size(a), 4);
     });
 
     it('should return 2 activities since 1/10/2022', () => {
       const a = activitiesSince(activityHistory, getPastTimestamp(11));
-      assert.equal(_.size(a), 2);
+      assert.equal(_.size(a), 4);
     });
 
     it('should return 0 activites since 5 days in future', () => {
@@ -42,12 +42,12 @@ describe('Activities Utilities', () => {
         activityHistory,
         getPastTimestamp(14),
       );
-      assert.equal(_.size(a), 3);
+      assert.equal(_.size(a), 5);
     });
 
     it('should handle no timeSince variable', () => {
       const a = getActivities(activityList, activityHistory);
-      assert.equal(_.size(a), 1);
+      assert.equal(_.size(a), 3);
     });
   });
 
@@ -64,7 +64,7 @@ describe('Activities Utilities', () => {
 
     it('should handle no timeSince variable', () => {
       const a = getActivitiesText(activityList, activityHistory);
-      assert.equal(a.includes('Made the bed'), false);
+      assert.equal(a.includes('Made the bed'), true);
       assert.equal(a.includes('ago'), true);
     });
   });

@@ -19,33 +19,24 @@ const getUser: Function = async (event: APIGatewayEvent) => {
   if (!account) {
     return corsErrorResponse({ error: 'No user found' });
   }
-  return getOrCreateUser(account).then((user) =>
-    corsSuccessResponse({
+  return getOrCreateUser(account).then((user) => {
+    const activities = JSON.parse(_.get(user, 'activities'));
+    const timeline = JSON.parse(_.get(user, 'activitiesTimeline'));
+
+    return corsSuccessResponse({
       user: _.get(user, 'userId'),
-      pointsToday: getScore(
-        JSON.parse(_.get(user, 'activities')),
-        JSON.parse(_.get(user, 'activitiesTimeline')),
-      ),
-      activitiesToday: getActivities(
-        JSON.parse(_.get(user, 'activities')),
-        JSON.parse(_.get(user, 'activitiesTimeline')),
-      ),
-      activitiesTodayText: getActivitiesText(
-        JSON.parse(_.get(user, 'activities')),
-        JSON.parse(_.get(user, 'activitiesTimeline')),
-      ),
-      lastActivity: getLastActivity(
-        JSON.parse(_.get(user, 'activities')),
-        JSON.parse(_.get(user, 'activitiesTimeline')),
-      ),
+      pointsToday: getScore(activities, timeline),
+      activitiesToday: getActivities(activities, timeline),
+      activitiesTodayText: getActivitiesText(activities, timeline),
+      lastActivity: getLastActivity(activities, timeline),
       currentGoal: _.get(user, 'currentGoal'),
       currentStreak: getStreak(
-        JSON.parse(_.get(user, 'activities')),
-        JSON.parse(_.get(user, 'activitiesTimeline')),
+        activities,
+        timeline,
         JSON.parse(_.get(user, 'goalHistory')),
       ),
-    }),
-  );
+    });
+  });
 };
 
 export default runWarm(getUser);

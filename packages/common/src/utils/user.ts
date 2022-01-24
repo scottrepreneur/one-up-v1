@@ -16,7 +16,7 @@ export const getStreak = (
   activityHistory: IActivityHistory[],
   goalHistory: IGoal[],
 ) => {
-  const streak = 0;
+  let streak = 0;
   let streakBreak = false;
   const goal = _.first(goalHistory);
   // set time cut off
@@ -34,7 +34,7 @@ export const getStreak = (
       });
       const timestampEnd = _.gt(streak, 1)
         ? sub(parseISO(handleTimestamp()), { days: streak })
-        : handleTimestamp();
+        : parseISO(handleTimestamp());
       activitiesForDay = _.filter(activityHistory, (e) =>
         isDuringDay(parseISO(e.timestamp), timestampStart, timestampEnd),
       );
@@ -46,7 +46,7 @@ export const getStreak = (
         _.get(goal, 'goal'),
       )
     ) {
-      _.add(streak, 1);
+      streak = _.add(streak, 1);
     } else {
       streakBreak = true;
     }
