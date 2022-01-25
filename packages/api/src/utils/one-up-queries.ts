@@ -19,7 +19,7 @@ const getUser = async (user: string): Promise<any> => {
 const newUserRecordParams = (user: any) => {
   const timestamp = new Date().toISOString();
   return {
-    userId: user,
+    userId: _.toLower(user),
     currentGoal: 1,
     goalHistory: JSON.stringify([{ goal: 1, timestamp }]),
     activities: JSON.stringify([]),
@@ -61,7 +61,7 @@ export const addActivityToDb = async (
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
     Key: {
-      userId: account,
+      userId: _.toLower(account),
     },
     ExpressionAttributeNames: {
       '#activities': 'activities',
@@ -88,7 +88,7 @@ export const addActivityHistoryToDb = async (
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
     Key: {
-      userId: account,
+      userId: _.toLower(account),
     },
     ExpressionAttributeNames: {
       '#activitiesTimeline': 'activitiesTimeline',
@@ -116,7 +116,7 @@ export const updateActivities = async (
   const params: any = {
     TableName: process.env.DYNAMODB_USERS_TABLE,
     Key: {
-      userId: account,
+      userId: _.toLower(account),
     },
     ExpressionAttributeNames: {
       '#activities': 'activities',

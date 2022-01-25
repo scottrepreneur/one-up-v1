@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { IActivityHistory } from '@one-up/common';
+import { utils } from 'ethers';
 import { addActivityHistoryToDb } from './one-up-queries';
 
 export const addHistoryForActivity = async (
@@ -18,3 +19,5 @@ export const addHistoryForActivity = async (
     .then((updatedHistory: any) => Promise.resolve(updatedHistory))
     .catch((error: any) => Promise.reject(error));
 };
+
+export const invalidAddress = (address: string) => !utils.isAddress(address);

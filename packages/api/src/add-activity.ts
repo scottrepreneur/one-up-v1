@@ -8,6 +8,7 @@ import {
   getOrCreateUser,
   addActivityToDb,
 } from './utils';
+import { invalidAddress } from './utils/temp';
 
 const addActivity: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
@@ -15,7 +16,7 @@ const addActivity: Function = async (event: APIGatewayEvent) => {
   const account = _.toLower(_.get(event, 'pathParameters.userId'));
   let userActivities: IActivity[] = [];
 
-  if (!account) {
+  if (!account || invalidAddress(account)) {
     return corsErrorResponse({ error: 'No userId found' });
   }
 

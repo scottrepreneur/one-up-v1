@@ -8,6 +8,7 @@ import {
   getOrCreateUser,
   updateActivities,
 } from './utils';
+import { invalidAddress } from './utils/temp';
 
 const updateActivity: Function = async (
   event: APIGatewayEvent,
@@ -17,7 +18,7 @@ const updateActivity: Function = async (
   const activityData: IActivity = JSON.parse(event.body || '{}');
   activityData.points = parseFloat(_.get(activityData, 'points'));
 
-  if (!userId || !activityKey || !activityData) {
+  if (!userId || !activityKey || !activityData || invalidAddress(userId)) {
     return corsErrorResponse({ error: 'No id or key found' });
   }
   return getOrCreateUser(_.toLower(userId))

@@ -1,6 +1,6 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import _ from 'lodash';
-import { sub, parseISO, isAfter } from 'date-fns';
+import { sub, parseISO, isAfter, add, formatDistanceToNow } from 'date-fns';
 import { IActivityHistory, getLastActivity } from '@one-up/common';
 import {
   corsSuccessResponse,
@@ -8,7 +8,7 @@ import {
   runWarm,
   getOrCreateUser,
 } from './utils';
-import { addHistoryForActivity } from './utils/temp';
+import { addHistoryForActivity, invalidAddress } from './utils/temp';
 
 const addActivityHistory: Function = async (event: APIGatewayEvent) => {
   const timestamp = new Date().toISOString();
@@ -18,7 +18,7 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
   );
   let userActivityHistory: IActivityHistory[] = [];
 
-  if (!account) {
+  if (!account || invalidAddress(account)) {
     return corsErrorResponse({ error: 'No `userId` found' });
   }
 
@@ -53,18 +53,28 @@ const addActivityHistory: Function = async (event: APIGatewayEvent) => {
       userActivityHistory,
       activityKey,
     );
+    const lastActivityTimestamp = parseISO(
+      _.get(lastActivity, 'timestamp') || '',
+    );
 
     if (
       _.get(lastActivity, 'timestamp') &&
       isAfter(
         sub(parseISO(timestamp), { minutes: cooldown }),
-        parseISO(_.get(lastActivity, 'timestamp') || ''),
+        lastActivityTimestamp,
       )
     ) {
       return addHistoryForActivity(account, activityKey, userActivityHistory)
         .then((result) => corsSuccessResponse({ success: true, result }))
         .catch((error) => corsErrorResponse({ error }));
     }
+    const cooldownExpires = add(lastActivityTimestamp, {
+      minutes: cooldown,
+    });
+    const cooldownRemaining = formatDistanceToNow(cooldownExpires);
+    return corsErrorResponse({
+      error: `Please wait for ${cooldownRemaining} to log '${activityKey}' again`,
+    });
   });
 };
 

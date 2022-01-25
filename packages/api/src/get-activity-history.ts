@@ -7,11 +7,12 @@ import {
   runWarm,
   getOrCreateUser,
 } from './utils';
+import { invalidAddress } from './utils/temp';
 
 const getActivityHistory: Function = async (event: APIGatewayEvent) => {
   const account = _.get(event, 'pathParameters.userId');
 
-  if (!account) {
+  if (!account || invalidAddress(account)) {
     return corsErrorResponse({ error: 'No user found' });
   }
   return getOrCreateUser(account)
